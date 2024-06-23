@@ -69,7 +69,7 @@ let Application = Vue.createApp({
                 display_name += " " + window.Telegram.WebApp.initialDataUnsafe.user.last_name
             }
 
-            return "John Doe"
+            return display_name ? display_name : "John Doe"
         }
     },
 
