@@ -45,6 +45,7 @@ let Application = Vue.createApp({
 
     mounted: function () {
         this.Login()
+        this.tglogs = window.Telegram.WebApp
     },
 })
 
