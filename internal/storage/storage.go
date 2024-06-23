@@ -25,6 +25,8 @@ type (
 var (
 	migrate = []interface{}{
 		model.User{},
+		model.UserProduct{},
+		model.Product{},
 	}
 )
 

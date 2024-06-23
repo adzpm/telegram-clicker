@@ -2,9 +2,9 @@ package api
 
 import (
 	fiber "github.com/gofiber/fiber/v2"
-	"go.uber.org/zap"
+	zap "go.uber.org/zap"
 
-	model "github.com/adzpm/tg-clicker/internal/model"
+	model "github.com/adzpm/telegram-clicker/internal/model"
 )
 
 func (a *API) Login(c *fiber.Ctx) error {

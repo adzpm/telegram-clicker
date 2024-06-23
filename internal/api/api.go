@@ -7,7 +7,7 @@ import (
 	fiber "github.com/gofiber/fiber/v2"
 	zap "go.uber.org/zap"
 
-	"github.com/adzpm/telegram-clicker/internal/storage"
+	storage "github.com/adzpm/telegram-clicker/internal/storage"
 )
 
 type (
