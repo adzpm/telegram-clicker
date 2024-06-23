@@ -55,6 +55,8 @@ let Application = Vue.createApp({
 
     mounted: function () {
         // copy telegram data to local variable
+        this.telegram_data = window.Telegram?.WebApp?.initialDataUnsafe
+
         this.Login()
     },
 })
