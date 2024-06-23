@@ -2,8 +2,6 @@ package api
 
 import (
 	"context"
-	"net"
-
 	fiber "github.com/gofiber/fiber/v2"
 	zap "go.uber.org/zap"
 
@@ -12,7 +10,6 @@ import (
 
 type (
 	Config struct {
-		Host    string
 		Port    string
 		WebPath string
 	}
@@ -48,5 +45,5 @@ func (a *API) setupRoutes(ctx context.Context) {
 func (a *API) Start(ctx context.Context) error {
 	a.setupRoutes(ctx)
 
-	return a.srv.Listen(net.JoinHostPort(a.cfg.Host, a.cfg.Port))
+	return a.srv.Listen(":" + a.cfg.Port)
 }
