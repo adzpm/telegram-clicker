@@ -45,18 +45,18 @@ let Application = Vue.createApp({
         },
 
         UserTelegramID() {
-            return window.Telegram.WebApp.initDataUnsafe.user.id
+            return window.Telegram.WebApp['initDataUnsafe']['user']['id']
         },
 
         UserTelegramName() {
             let d_name = ""
 
-            if (window.Telegram.WebApp.initDataUnsafe.user.first_name) {
-                d_name = window.Telegram.WebApp.initDataUnsafe.user.first_name
+            if (window.Telegram.WebApp['initDataUnsafe']['user']['first_name']) {
+                d_name = window.Telegram.WebApp['initDataUnsafe']['user']['first_name']
             }
 
-            if (window.Telegram.WebApp.initDataUnsafe.user.last_name) {
-                d_name += " " + window.Telegram.WebApp.initDataUnsafe.user.last_name
+            if (window.Telegram.WebApp['initDataUnsafe']['user']['last_name']) {
+                d_name += " " + window.Telegram.WebApp['initDataUnsafe']['user']['last_name']
             }
 
             return d_name
