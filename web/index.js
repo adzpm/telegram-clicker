@@ -1,6 +1,8 @@
 let Application = Vue.createApp({
     data: function () {
         return {
+            telegram_data: {},
+
             telegram_id: 777,
             tmp_btn_count: [1],
             user: {
@@ -45,7 +47,7 @@ let Application = Vue.createApp({
 
     mounted: function () {
         this.Login()
-        this.tglogs = window.Telegram.WebApp.InitDataUnsafe
+        this.telegram_data = window.Telegram.WebApp.initDataUnsafe
     },
 })
 
