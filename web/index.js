@@ -45,11 +45,11 @@ let Application = Vue.createApp({
         },
 
         TelegramID() {
-            return window.Telegram?.WebApp?.initDataUnsafe?.user?.id
+            return this.telegram_data?.user?.id
         },
 
         TelegramName() {
-            return window.Telegram?.WebApp?.initDataUnsafe?.user?.first_name
+            return this.telegram_data?.user?.first_name
         }
     },
 
