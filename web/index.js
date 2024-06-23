@@ -45,7 +45,11 @@ let Application = Vue.createApp({
         },
 
         UserTelegramID() {
-            return window.Telegram.WebApp['initDataUnsafe']['user']['id']
+            if (window.Telegram.WebApp.initDataUnsafe.user.id) {
+                return window.Telegram.WebApp.initDataUnsafe.user.id
+            }
+
+            return "123456789"
         },
 
         UserTelegramName() {
