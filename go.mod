@@ -1,4 +1,4 @@
-module github.com/adzpm/tg-clicker
+module github.com/adzpm/telegram-clicker
 
 go 1.22.4
 

@@ -1,11 +1,13 @@
 package storage
 
 import (
-	model "github.com/adzpm/tg-clicker/internal/model"
+	"time"
+
 	zap "go.uber.org/zap"
 	sqlite "gorm.io/driver/sqlite"
 	gorm "gorm.io/gorm"
-	"time"
+
+	model "github.com/adzpm/telegram-clicker/internal/model"
 )
 
 type (

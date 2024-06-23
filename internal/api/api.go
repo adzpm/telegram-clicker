@@ -2,11 +2,12 @@ package api
 
 import (
 	"context"
-	"github.com/adzpm/tg-clicker/internal/storage"
 	"net"
 
 	fiber "github.com/gofiber/fiber/v2"
 	zap "go.uber.org/zap"
+
+	"github.com/adzpm/telegram-clicker/internal/storage"
 )
 
 type (

@@ -2,11 +2,11 @@ package main
 
 import (
 	"context"
-	"github.com/adzpm/tg-clicker/internal/storage"
+	"github.com/adzpm/telegram-clicker/internal/storage"
 
 	zap "go.uber.org/zap"
 
-	api "github.com/adzpm/tg-clicker/internal/api"
+	api "github.com/adzpm/telegram-clicker/internal/api"
 )
 
 func main() {
