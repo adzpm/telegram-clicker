@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Telegram Clicker</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="pkg/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="pkg/axios.min.js"></script>
+    <script src="pkg/vue.global.prod.js"></script>
+</head>
+<body class="p-3" id="app">
+
+<div class="px-2 navbar fixed-top gap-3 bg-light border-bottom border-dark deg-neg shadow">
+    <div>
+        <img src="asset/img/avatar.png" class="rounded-4 deg-neg border border-dark border-1"
+             alt="avatar" height="80px">
+    </div>
+    <div class="d-flex flex-column gap-2 flex-grow-1">
+        <div class="d-flex align-items-center dec-line deg-neg lead fw-bold">
+            <img src="asset/img/user.svg" alt="coin" height="24px" class="me-2">
+            <span class="text-dark ">id: {{ user.telegram_id}}</span>
+        </div>
+        <div class="d-flex align-items-center fw-bold small">
+            <img src="asset/img/coin.svg" alt="coin" height="18px" class="me-2">
+            <span class="text-success">{{ user.coins }}</span>
+        </div>
+        <div class="d-flex align-items-center fw-bold small">
+            <img src="asset/img/coin.svg" alt="coin" height="18px" class="me-2">
+            <span class="text-danger">1 per click (TODO)</span>
+        </div>
+
+    </div>
+</div>
+
+<div class="container d-flex flex-column gap-3" style="padding: 7em 0 4em 0" @click="Click()">
+    <div class="d-flex w-100 gap-4" v-for="i in tmp_btn_count">
+        <div class="d-flex flex-column gap-2 align-items-center">
+            <img src="asset/img/ph-1.png" class="rounded-4 border border-dark border-1 deg-pos"
+                 alt="avatar" height="72px" width="72px">
+            <span class="fw-bold text-secondary deg-neg">LVL 41</span>
+        </div>
+        <div class="row row-cols-2 flex-grow-1">
+            <div class="d-flex align-items-center m-0 p-2 deg-pos">
+                <img src="asset/img/coin.svg" alt="coin" height="24px" class="me-2">
+                <span class="text-dark fw-bold">3 813</span>
+            </div>
+            <div class="d-flex align-items-center m-0 p-2 deg-neg">
+                <img src="asset/img/clock.svg" alt="coin" height="24px" class="me-2">
+                <span class="text-dark fw-bold">10 sec</span>
+            </div>
+            <div class="col-12 px-2 d-flex flex-column gap-1">
+                <a class="btn btn-game fw-bold bg-success w-100 deg-neg">
+                    <span class="text-uppercase me-2">Upgrade for</span>
+                    <img src="asset/img/coin.svg" alt="coin" height="24px" class="me-1">
+                    <span class="">104 134 411</span>
+                </a>
+                <div class="progress deg-neg rounded-0 border border-dark">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-success overflow-visible"
+                         style="width: 71%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="px-2 navbar fixed-bottom bg-light border-top border-dark text-uppercase">
+    <div class="d-flex align-items-center m-0 p-2 deg-neg small dec-line">
+        <img src="asset/img/step.svg" alt="coin" height="24px" class="me-2">
+        <span class="text-dark fw-bold">steps</span>
+    </div>
+    <div class="d-flex align-items-center m-0 p-2 deg-pos small">
+        <img src="asset/img/invest.svg" alt="coin" height="24px" class="me-2">
+        <span class="text-dark fw-bold">investors</span>
+    </div>
+    <div class="d-flex align-items-center m-0 p-2 deg-neg small">
+        <img src="asset/img/task.svg" alt="coin" height="24px" class="me-2">
+        <span class="text-dark fw-bold">tasks</span>
+    </div>
+</div>
+
+<script src="index.js"></script>
+</body>
+</html>
