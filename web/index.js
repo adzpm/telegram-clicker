@@ -43,11 +43,28 @@ let Application = Vue.createApp({
             let url = window.location.href
             return url.substring(0, url.lastIndexOf('/'))
         },
+
+        UserTelegramID() {
+            return window.Telegram.WebApp.initDataUnsafe.user.id
+        },
+
+        UserTelegramName() {
+            let d_name = ""
+
+            if (window.Telegram.WebApp.initDataUnsafe.user.first_name) {
+                d_name = window.Telegram.WebApp.initDataUnsafe.user.first_name
+            }
+
+            if (window.Telegram.WebApp.initDataUnsafe.user.last_name) {
+                d_name += " " + window.Telegram.WebApp.initDataUnsafe.user.last_name
+            }
+
+            return d_name
+        }
     },
 
     mounted: function () {
         this.Login()
-        this.telegram_data = window.Telegram.WebApp.initDataUnsafe
     },
 })
 
