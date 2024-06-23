@@ -68,7 +68,8 @@ let Application = Vue.createApp({
     },
 
     mounted: function () {
-        this.telegram_data = window.Telegram.WebApp.initDataUnsafe
+        this.telegram_data = {...window.Telegram.WebApp.initDataUnsafe}
+
         this.Login()
     },
 })
