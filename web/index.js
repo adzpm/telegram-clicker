@@ -44,14 +44,26 @@ let Application = Vue.createApp({
             return url.substring(0, url.lastIndexOf('/'))
         },
 
-        UserTelegramID() {
+        TelegramID() {
             if (this.telegram_data) {
                 return this.telegram_data.user.id
             }
+
+            return "123456789"
         },
 
-        UserTelegramName() {
+        TelegramName() {
+            let display_name = ""
 
+            if (this.telegram_data && this.telegram_data.user && this.telegram_data.user.first_name) {
+                display_name += this.telegram_data.user.first_name
+            }
+
+            if (this.telegram_data && this.telegram_data.user && this.telegram_data.user.last_name) {
+                display_name += ' ' + this.telegram_data.user.last_name
+            }
+
+            return "John Doe"
         }
     },
 
