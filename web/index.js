@@ -45,11 +45,11 @@ let Application = Vue.createApp({
         },
 
         TelegramID() {
-            return this.telegram_data?.user?.id
+            return this.telegram_data?.user?.id ?? 9876543210
         },
 
         TelegramName() {
-            return this.telegram_data?.user?.first_name
+            return this.telegram_data?.user?.first_name ?? 'John Doe'
         }
     },
 
