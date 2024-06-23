@@ -63,7 +63,6 @@ let Application = Vue.createApp({
         console.log(this.telegram_data)
 
         this.Login(this.TelegramID)
-
     },
 })
 
