@@ -16,7 +16,7 @@ let Application = Vue.createApp({
 
             axios.get(url).then(response => {
                 console.log(response.data)
-                this.user = response.data
+                this.user_data = response.data
             }).catch(error => {
                 console.log(error)
             })
@@ -27,7 +27,7 @@ let Application = Vue.createApp({
 
             axios.get(url).then(response => {
                 console.log(response.data)
-                this.user = response.data
+                this.user_data = response.data
             }).catch(error => {
                 console.log(error)
             })
