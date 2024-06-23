@@ -45,29 +45,18 @@ let Application = Vue.createApp({
         },
 
         UserTelegramID() {
-            if (window.Telegram.WebApp.initDataUnsafe.user.id) {
-                return window.Telegram.WebApp.initDataUnsafe.user.id
+            if (this.telegram_data) {
+                return this.telegram_data.user.id
             }
-
-            return "123456789"
         },
 
         UserTelegramName() {
-            let d_name = ""
 
-            if (window.Telegram.WebApp.initDataUnsafe.user.first_name) {
-                d_name = window.Telegram.WebApp.initDataUnsafe.user.first_name
-            }
-
-            if (window.Telegram.WebApp.initDataUnsafe.user.last_name) {
-                d_name += " " + window.Telegram.WebApp.initDataUnsafe.user.last_name
-            }
-
-            return d_name
         }
     },
 
     mounted: function () {
+        this.telegram_data = window.Telegram.WebApp.initDataUnsafe
         this.Login()
     },
 })
