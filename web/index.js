@@ -15,8 +15,8 @@ let Application = Vue.createApp({
     },
 
     methods: {
-        Login() {
-            let url = this.CurrentURL + '/login' + '?telegram_id=' + this.telegram_id
+        Login(telegram_id) {
+            let url = this.CurrentURL + '/login' + '?telegram_id=' + telegram_id
 
             axios.get(url).then(response => {
                 console.log(response.data)
@@ -45,25 +45,25 @@ let Application = Vue.createApp({
         },
 
         TelegramID() {
-            return "123456789"
+            return this.telegram_data?.user?.id
         },
 
         TelegramName() {
-            return window.Telegram?.WebApp?.initDataUnsafe?.user?.first_name
+            return this.telegram_data?.user?.first_name
         }
     },
 
     mounted: function () {
         // copy telegram data to local variable
         while (window.Telegram.WebApp.initDataUnsafe === undefined) {
-            console.log('waiting for telegram data')
+            setTimeout(() => {}, 10)
         }
 
-        this.telegram_data = { ... window.Telegram?.WebApp?.initDataUnsafe }
-
-        this.Login()
-
+        this.telegram_data = {...window.Telegram?.WebApp?.initDataUnsafe}
         console.log(this.telegram_data)
+
+        this.Login(this.TelegramID)
+
     },
 })
 
