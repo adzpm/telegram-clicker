@@ -26,8 +26,8 @@ let Application = Vue.createApp({
             })
         },
 
-        Click() {
-            let url = this.CurrentURL + '/click' + '?telegram_id=' + this.telegram_id
+        Click(telegram_id) {
+            let url = this.CurrentURL + '/click' + '?telegram_id=' + telegram_id
 
             axios.get(url).then(response => {
                 console.log(response.data)
