@@ -3,13 +3,9 @@ let Application = Vue.createApp({
         return {
             telegram_data: {},
 
-            telegram_id: 777,
             tmp_btn_count: [1],
-            user: {
-                id: 0,
-                telegram_id: 0,
+            user_data: {
                 coins: 0,
-                last_seen: 0,
             },
         }
     },

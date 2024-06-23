@@ -10,9 +10,8 @@
     <script src="pkg/axios.min.js"></script>
     <script src="pkg/vue.global.prod.js"></script>
 </head>
-<body class="p-3" id="app">
-
-<div class="px-2 navbar fixed-top gap-3 bg-light border-bottom border-dark deg-neg shadow">
+<body class="p-3 text-nowrap" id="app">
+<div class="px-2 navbar fixed-top gap-3 bg-light border-bottom border-dark deg-neg shadow flex-nowrap">
     <div>
         <img src="asset/img/avatar.png" class="rounded-4 deg-neg border border-dark border-1" alt="avatar" height="80px">
     </div>
@@ -24,7 +23,7 @@
         </div>
         <div class="d-flex align-items-center fw-bold small">
             <img src="asset/img/coin.svg" alt="coin" height="18px" class="me-2">
-            <span class="text-success">{{ user.coins }}</span>
+            <span class="text-success">{{ user_data.coins }}</span>
         </div>
         <div class="d-flex align-items-center fw-bold small">
             <img src="asset/img/coin.svg" alt="coin" height="18px" class="me-2">
