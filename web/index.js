@@ -45,7 +45,7 @@ let Application = Vue.createApp({
         },
 
         TelegramID() {
-            if (this.telegram_data) {
+            if (this.telegram_data && this.telegram_data.user && this.telegram_data.user.id) {
                 return this.telegram_data.user.id
             }
 
