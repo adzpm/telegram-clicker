@@ -49,7 +49,13 @@ let Application = Vue.createApp({
         },
 
         TelegramName() {
-            return this.telegram_data?.user?.first_name ?? 'John Doe'
+            let name = this.telegram_data?.user?.first_name
+
+            if (this.telegram_data?.user?.last_name) {
+                name += ' ' + this.telegram_data?.user?.last_name
+            }
+
+            return name ?? 'John Doe'
         }
     },
 
