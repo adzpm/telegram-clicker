@@ -45,8 +45,10 @@ let Application = Vue.createApp({
         },
 
         TelegramID() {
-            if (this.telegram_data && this.telegram_data.user && this.telegram_data.user.id) {
-                return this.telegram_data.user.id
+            if (window.Telegram.WebApp.initialDataUnsafe &&
+                window.Telegram.WebApp.initialDataUnsafe.user &&
+                window.Telegram.WebApp.initialDataUnsafe.user.id) {
+                return window.Telegram.WebApp.initialDataUnsafe.user.id
             }
 
             return "123456789"
@@ -55,12 +57,16 @@ let Application = Vue.createApp({
         TelegramName() {
             let display_name = ""
 
-            if (this.telegram_data && this.telegram_data.user && this.telegram_data.user.first_name) {
-                display_name += this.telegram_data.user.first_name
+            if (window.Telegram.WebApp.initialDataUnsafe &&
+                window.Telegram.WebApp.initialDataUnsafe.user &&
+                window.Telegram.WebApp.initialDataUnsafe.user.first_name) {
+                display_name = window.Telegram.WebApp.initialDataUnsafe.user.first_name
             }
 
-            if (this.telegram_data && this.telegram_data.user && this.telegram_data.user.last_name) {
-                display_name += ' ' + this.telegram_data.user.last_name
+            if (window.Telegram.WebApp.initialDataUnsafe &&
+                window.Telegram.WebApp.initialDataUnsafe.user &&
+                window.Telegram.WebApp.initialDataUnsafe.user.last_name) {
+                display_name += " " + window.Telegram.WebApp.initialDataUnsafe.user.last_name
             }
 
             return "John Doe"
@@ -68,8 +74,6 @@ let Application = Vue.createApp({
     },
 
     mounted: function () {
-        this.telegram_data = {...window.Telegram.WebApp.initDataUnsafe}
-
         this.Login()
     },
 })
