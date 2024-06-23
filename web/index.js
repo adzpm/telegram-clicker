@@ -45,35 +45,16 @@ let Application = Vue.createApp({
         },
 
         TelegramID() {
-            if (window.Telegram.WebApp.initialDataUnsafe &&
-                window.Telegram.WebApp.initialDataUnsafe.user &&
-                window.Telegram.WebApp.initialDataUnsafe.user.id) {
-                return window.Telegram.WebApp.initialDataUnsafe.user.id
-            }
-
             return "123456789"
         },
 
         TelegramName() {
-            let display_name = ""
-
-            if (window.Telegram.WebApp.initialDataUnsafe &&
-                window.Telegram.WebApp.initialDataUnsafe.user &&
-                window.Telegram.WebApp.initialDataUnsafe.user.first_name) {
-                display_name = window.Telegram.WebApp.initialDataUnsafe.user.first_name
-            }
-
-            if (window.Telegram.WebApp.initialDataUnsafe &&
-                window.Telegram.WebApp.initialDataUnsafe.user &&
-                window.Telegram.WebApp.initialDataUnsafe.user.last_name) {
-                display_name += " " + window.Telegram.WebApp.initialDataUnsafe.user.last_name
-            }
-
-            return display_name ? display_name : "John Doe"
+            return window.Telegram?.WebApp?.initialDataUnsafe?.user?.first_name
         }
     },
 
     mounted: function () {
+        // copy telegram data to local variable
         this.Login()
     },
 })
