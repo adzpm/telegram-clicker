@@ -11,9 +11,9 @@
     <script src="pkg/vue.global.prod.js"></script>
 </head>
 <body class="p-3 text-nowrap" id="app">
-<div class="px-2 navbar fixed-top gap-3 bg-light border-bottom border-dark deg-neg shadow flex-nowrap">
+<div class="px-2 navbar fixed-top gap-3 bg-body-tertiary border-bottom border-dark shadow flex-nowrap">
     <div>
-        <img src="asset/img/avatar.png" class="rounded-4 deg-neg border border-dark border-1" alt="avatar" height="80px">
+        <img src="asset/img/avatar.png" class="rounded-circle border border-1 border-black" alt="avatar" height="80px">
     </div>
     <div class="d-flex flex-column gap-1 flex-grow-1">
         <div class="d-flex align-items-center fw-bold fs-6">
@@ -35,26 +35,26 @@
 <div class="container d-flex flex-column gap-3" style="padding: 7em 0 4em 0" @click="Click(TelegramID)">
     <div class="d-flex w-100 gap-4" v-for="i in tmp_btn_count">
         <div class="d-flex flex-column gap-2 align-items-center">
-            <img src="asset/img/ph-1.png" class="rounded-4 border border-dark border-1 deg-pos"
+            <img src="asset/img/ph-1.png" class="rounded-4 border border-dark border-1"
                  alt="avatar" height="72px" width="72px">
-            <span class="fw-bold text-secondary deg-neg">LVL 41</span>
+            <span class="fw-bold text-secondary ">LVL 41</span>
         </div>
         <div class="row row-cols-2 flex-grow-1">
-            <div class="d-flex align-items-center m-0 p-2 deg-pos">
+            <div class="d-flex align-items-center m-0 p-2">
                 <img src="asset/img/coin.svg" alt="coin" height="24px" class="me-2">
                 <span class="text-dark fw-bold">3 813</span>
             </div>
-            <div class="d-flex align-items-center m-0 p-2 deg-neg">
+            <div class="d-flex align-items-center m-0 p-2 ">
                 <img src="asset/img/clock.svg" alt="coin" height="24px" class="me-2">
                 <span class="text-dark fw-bold">10 sec</span>
             </div>
             <div class="col-12 px-2 d-flex flex-column gap-1">
-                <a class="btn btn-game fw-bold bg-success w-100 deg-neg">
+                <a class="btn btn-outline-dark fw-bold w-100 ">
                     <span class="text-uppercase me-2">Upgrade for</span>
-                    <img src="asset/img/coin.svg" alt="coin" height="24px" class="me-1">
+                    <img src="asset/img/coin.svg" alt="coin" height="18px" class="me-1">
                     <span class="">104 134 411</span>
                 </a>
-                <div class="progress deg-neg rounded-0 border border-dark">
+                <div class="progress rounded-1">
                     <div class="progress-bar progress-bar-striped progress-bar-animated bg-success overflow-visible"
                          style="width: 71%"></div>
                 </div>
@@ -64,23 +64,18 @@
 </div>
 
 <div class="px-2 navbar fixed-bottom bg-light border-top border-dark text-uppercase">
-    <div class="d-flex align-items-center m-0 p-2 deg-neg small dec-line">
+    <div class="d-flex align-items-center m-0 p-2 small dec-line">
         <img src="asset/img/step.svg" alt="coin" height="24px" class="me-2">
         <span class="text-dark fw-bold">steps</span>
     </div>
-    <div class="d-flex align-items-center m-0 p-2 deg-pos small">
+    <div class="d-flex align-items-center m-0 p-2 small">
         <img src="asset/img/invest.svg" alt="coin" height="24px" class="me-2">
         <span class="text-dark fw-bold">investors</span>
     </div>
-    <div class="d-flex align-items-center m-0 p-2 deg-neg small">
+    <div class="d-flex align-items-center m-0 p-2 small">
         <img src="asset/img/task.svg" alt="coin" height="24px" class="me-2">
         <span class="text-dark fw-bold">tasks</span>
     </div>
-</div>
-
-<div class="bg-warning mt-5 p-5">
-    <h3 class="text-center text-dark">Telegram Data</h3>
-    <pre class="text-dark">{{ telegram_data }}</pre>
 </div>
 
 <script src="index.js"></script>

@@ -38,8 +38,7 @@ func (a *API) setupRoutes(ctx context.Context) {
 
 	a.srv.Static("/", a.cfg.WebPath)
 
-	a.srv.Get("/login", a.Login)
-	a.srv.Get("/click", a.Click)
+	a.srv.Get("/enter", a.Enter)
 }
 
 func (a *API) Start(ctx context.Context) error {

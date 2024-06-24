@@ -1,86 +1,146 @@
 package api
 
 import (
+	"github.com/adzpm/telegram-clicker/internal/math"
+	"github.com/adzpm/telegram-clicker/internal/model"
 	fiber "github.com/gofiber/fiber/v2"
 	zap "go.uber.org/zap"
-
-	model "github.com/adzpm/telegram-clicker/internal/model"
+	"time"
 )
 
-func (a *API) Login(c *fiber.Ctx) error {
-	// get telegram_id from body
-
-	tid := c.QueryInt("telegram_id")
-
-	if tid == 0 {
-		if err := c.Status(400).JSON(fiber.Map{"error": "telegram_id is required"}); err != nil {
-			return err
-		}
-
-		return nil
-	}
-
-	a.lgr.Info("try to login", zap.Int("telegram_id", tid))
-
-	// get user by telegram_id
-	// if user not exists, create new user
-	// return user
-
-	u, err := a.str.GetUserByTelegramID(uint64(tid))
-
-	if err != nil {
-		u, err = a.str.CreateUser(&model.User{
-			TelegramID: uint64(tid),
-			Coins:      5,
-		})
-
-		if err != nil {
-			if err = c.Status(500).JSON(fiber.Map{"error": err.Error()}); err != nil {
-				return err
-			}
-
-			return err
-		}
-	}
-
-	if u, err = a.str.Login(uint64(tid)); err != nil {
-		if err = c.Status(500).JSON(fiber.Map{"error": err.Error()}); err != nil {
-			return err
-		}
-
+func Throw500Error(c *fiber.Ctx, dst interface{}) (err error) {
+	if err = c.Status(500).JSON(fiber.Map{"error": dst}); err != nil {
 		return err
 	}
 
-	return c.Status(200).JSON(u)
+	return nil
 }
 
-func (a *API) Click(c *fiber.Ctx) error {
-	// get telegram_id from body
-	// get user by telegram_id
-	// add coins to user
-	// return user
-
-	tid := c.QueryInt("telegram_id")
-
-	if tid == 0 {
-		if err := c.Status(400).JSON(fiber.Map{"error": "telegram_id is required"}); err != nil {
-			return err
-		}
-
-		return nil
-	}
-
-	a.lgr.Info("try to click", zap.Int("telegram_id", tid))
-
-	u, err := a.str.AddCoinsByTelegramID(uint64(tid), uint64(1))
-
-	if err != nil {
-		if err = c.Status(500).JSON(fiber.Map{"error": err.Error()}); err != nil {
-			return err
-		}
-
+func Throw400Error(c *fiber.Ctx, dst interface{}) (err error) {
+	if err = c.Status(400).JSON(fiber.Map{"error": dst}); err != nil {
 		return err
 	}
 
-	return c.Status(200).JSON(u)
+	return nil
+}
+
+func (a *API) Enter(c *fiber.Ctx) (err error) {
+	var (
+		user *model.User
+		tgID int
+	)
+
+	if tgID = c.QueryInt("telegram_id"); tgID == 0 {
+		return Throw400Error(c, "telegram_id is required")
+	}
+
+	a.lgr.Info("try to enter game", zap.Int("telegram_id", tgID))
+
+	if user, err = a.str.SelectUser(uint64(tgID)); err != nil {
+		a.lgr.Warn("error while selecting user. Try to create new account", zap.Error(err))
+
+		if user, err = a.str.InsertUser(uint64(tgID)); err != nil {
+			return Throw500Error(c, err.Error())
+		}
+
+		if _, err = a.str.InsertUserProduct(user.ID, 1, 1); err != nil {
+			return Throw500Error(c, err.Error())
+		}
+	}
+
+	var (
+		timeNow        = uint64(time.Now().Unix())
+		offlineMinutes = timeNow - user.LastSeen/60
+		allProducts    []model.Product
+		userProducts   []model.UserProduct
+		coinsToAdd     uint64
+	)
+
+	// calculate coins for offline time
+	if user.LastSeen != 0 {
+		// if user was offline more than 60 minutes, we will calculate only 60 minutes
+		if offlineMinutes > 60 {
+			offlineMinutes = 60
+		}
+
+		if allProducts, err = a.str.SelectProducts(); err != nil {
+			return Throw500Error(c, err.Error())
+		}
+
+		if userProducts, err = a.str.SelectUserProducts(user.ID); err != nil {
+			return Throw500Error(c, err.Error())
+		}
+
+		for _, product := range allProducts {
+			for _, userProduct := range userProducts {
+				if product.ID == userProduct.ProductID {
+					coinsToAdd += math.CalculateCoinsPerMinute(
+						product.StartCoins,
+						userProduct.Level,
+						product.CoinsMultiplier,
+					) * offlineMinutes
+				}
+			}
+		}
+
+		finalCoins := user.Coins + coinsToAdd
+
+		if user, err = a.str.UpdateUserCoins(user.TelegramID, finalCoins); err != nil {
+			return Throw500Error(c, err.Error())
+		}
+	}
+
+	if user, err = a.str.UpdateUserLastSeen(user.TelegramID, timeNow); err != nil {
+		return Throw500Error(c, err.Error())
+	}
+
+	products := make(map[uint64]*model.GameProduct)
+
+	// fill products map
+	for _, product := range allProducts {
+		products[product.ID] = &model.GameProduct{
+			ID:             product.ID,
+			Name:           product.Name,
+			ImageURL:       product.ImageURL,
+			UpgradePrice:   math.CalculateUpgradePrice(product.StartPrice, 0, product.PriceMultiplier),
+			CoinsPerClick:  math.CalculateCoinsPerClick(product.StartCoins, 0, product.CoinsMultiplier),
+			CoinsPerMinute: math.CalculateCoinsPerMinute(product.StartCoins, 0, product.CoinsMultiplier),
+			CurrentLevel:   0,
+			MaxLevel:       product.MaxLevel,
+		}
+	}
+
+	// fill current level, upgrade price, coins per click and coins per minute
+	for _, userProduct := range userProducts {
+		products[userProduct.ProductID].CurrentLevel = userProduct.Level
+
+		products[userProduct.ProductID].UpgradePrice = math.CalculateUpgradePrice(
+			allProducts[userProduct.ProductID].StartPrice,
+			products[userProduct.ProductID].CurrentLevel,
+			allProducts[userProduct.ProductID].PriceMultiplier,
+		)
+
+		products[userProduct.ProductID].CoinsPerClick = math.CalculateCoinsPerClick(
+			allProducts[userProduct.ProductID].StartCoins,
+			products[userProduct.ProductID].CurrentLevel,
+			allProducts[userProduct.ProductID].CoinsMultiplier,
+		)
+
+		products[userProduct.ProductID].CoinsPerMinute = math.CalculateCoinsPerMinute(
+			allProducts[userProduct.ProductID].StartCoins,
+			products[userProduct.ProductID].CurrentLevel,
+			allProducts[userProduct.ProductID].CoinsMultiplier,
+		)
+	}
+
+	response := &model.Game{
+		UserID:       user.ID,
+		TelegramID:   user.TelegramID,
+		LastSeen:     user.LastSeen,
+		CurrentCoins: user.Coins,
+		CurrentGold:  0,
+		Products:     products,
+	}
+
+	return c.Status(200).JSON(response)
 }

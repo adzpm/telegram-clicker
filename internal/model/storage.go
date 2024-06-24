@@ -20,10 +20,12 @@ type (
 		Name     string `json:"name"`
 		ImageURL string `json:"image_url"`
 
-		StartPrice      uint64  `json:"price"`
-		PriceMultiplier float64 `json:"multiplier"`
+		StartPrice      uint64  `json:"start_price"`
+		PriceMultiplier float64 `json:"price_multiplier"`
 
-		StartCoins      uint64  `json:"coins"`
+		StartCoins      uint64  `json:"start_coins"`
 		CoinsMultiplier float64 `json:"coins_multiplier"`
+
+		MaxLevel uint64 `json:"max_level"`
 	}
 )

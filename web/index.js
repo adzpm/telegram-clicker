@@ -11,8 +11,8 @@ let Application = Vue.createApp({
     },
 
     methods: {
-        Login(telegram_id) {
-            let url = this.CurrentURL + '/login' + '?telegram_id=' + telegram_id
+        Enter(telegram_id) {
+            let url = this.CurrentURL + '/enter' + '?telegram_id=' + telegram_id
 
             axios.get(url).then(response => {
                 console.log(response.data)
@@ -22,8 +22,8 @@ let Application = Vue.createApp({
             })
         },
 
-        Click(telegram_id) {
-            let url = this.CurrentURL + '/click' + '?telegram_id=' + telegram_id
+        Click(telegram_id, product_id) {
+            let url = this.CurrentURL + '/click' + '?telegram_id=' + telegram_id + '&product_id=' + product_id
 
             axios.get(url).then(response => {
                 console.log(response.data)
@@ -31,7 +31,18 @@ let Application = Vue.createApp({
             }).catch(error => {
                 console.log(error)
             })
-        }
+        },
+
+        BuyProduct(telegram_id, product_id) {
+            let url = this.CurrentURL + '/buy' + '?telegram_id=' + telegram_id + '&product_id=' + product_id
+
+            axios.get(url).then(response => {
+                console.log(response.data)
+                this.user_data = response.data
+            }).catch(error => {
+                console.log(error)
+            })
+        },
     },
 
     computed: {
@@ -56,15 +67,13 @@ let Application = Vue.createApp({
     },
 
     mounted: function () {
-        // copy telegram data to local variable
         while (window.Telegram.WebApp.initDataUnsafe === undefined) {
             setTimeout(() => {}, 10)
         }
 
         this.telegram_data = {...window.Telegram?.WebApp?.initDataUnsafe}
-        console.log(this.telegram_data)
 
-        this.Login(this.TelegramID)
+        this.Enter(this.TelegramID)
     },
 })
 

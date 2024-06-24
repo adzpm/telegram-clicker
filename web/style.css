@@ -12,10 +12,6 @@ body {
     background-size: cover;
 }
 
-.deg-pos {
-    transform: rotate(.5deg);
-}
-
 .deg-neg {
     transform: rotate(-.5deg);
 }
