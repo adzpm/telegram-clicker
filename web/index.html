@@ -23,7 +23,7 @@
         </div>
         <div class="d-flex align-items-center fw-bold small">
             <img src="asset/img/coin.svg" alt="coin" height="18px" class="me-2">
-            <span class="text-success">{{ user_data.coins }}</span>
+            <span class="text-success">{{ game_data.current_coins }}</span>
         </div>
         <div class="d-flex align-items-center fw-bold small">
             <img src="asset/img/coin.svg" alt="coin" height="18px" class="me-2">
@@ -32,49 +32,44 @@
     </div>
 </div>
 
-<div class="container d-flex flex-column gap-3" style="padding: 7em 0 4em 0" @click="Click(TelegramID)">
-    <div class="d-flex w-100 gap-4" v-for="i in tmp_btn_count">
-        <div class="d-flex flex-column gap-2 align-items-center">
-            <img src="asset/img/ph-1.png" class="rounded-4 border border-dark border-1"
-                 alt="avatar" height="72px" width="72px">
-            <span class="fw-bold text-secondary ">LVL 41</span>
+<div class="container d-flex flex-column gap-3" style="padding: 7em 0 4em 0">
+    <div class="d-flex w-100 gap-4" v-for="product in game_data.products">
+        <div class="d-flex flex-column gap-2 align-items-center" @click="Click(TelegramID, product.id)">
+            <img v-bind:src="product.image_url" class="rounded-4 border border-dark border-1 p-2" alt="img" height="72px" width="72px">
+            <span class="fw-bold text-secondary small">LVL {{ product.current_level }}</span>
         </div>
         <div class="row row-cols-2 flex-grow-1">
             <div class="d-flex align-items-center m-0 p-2">
-                <img src="asset/img/coin.svg" alt="coin" height="24px" class="me-2">
-                <span class="text-dark fw-bold">3 813</span>
+                <img src="asset/img/coin.svg" alt="coin" height="18px" class="me-2">
+                <span class="text-dark fw-bold">{{ product.coins_per_click }} per click</span>
             </div>
-            <div class="d-flex align-items-center m-0 p-2 ">
-                <img src="asset/img/clock.svg" alt="coin" height="24px" class="me-2">
-                <span class="text-dark fw-bold">10 sec</span>
+            <div class="d-flex align-items-center m-0 p-2">
+                <img src="asset/img/coin.svg" alt="coin" height="18px" class="me-2">
+                <span class="text-dark fw-bold">{{ product.coins_per_click }} per click</span>
             </div>
             <div class="col-12 px-2 d-flex flex-column gap-1">
-                <a class="btn btn-outline-dark fw-bold w-100 ">
-                    <span class="text-uppercase me-2">Upgrade for</span>
+                <a class="btn btn-outline-dark fw-bold w-100" @click="BuyProduct(TelegramID, product.id)">
+                    <span class="text-uppercase me-2">BUY</span>
                     <img src="asset/img/coin.svg" alt="coin" height="18px" class="me-1">
-                    <span class="">104 134 411</span>
+                    <span class="">{{ product.upgrade_price }}</span>
                 </a>
-                <div class="progress rounded-1">
-                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-success overflow-visible"
-                         style="width: 71%"></div>
-                </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="px-2 navbar fixed-bottom bg-light border-top border-dark text-uppercase">
-    <div class="d-flex align-items-center m-0 p-2 small dec-line">
+<div class="px-3 navbar fixed-bottom bg-light border-top border-dark text-uppercase">
+    <div class="d-flex align-items-center m-0 p-2 small">
         <img src="asset/img/step.svg" alt="coin" height="24px" class="me-2">
-        <span class="text-dark fw-bold">steps</span>
+        <span class="text-black fw-bold">Steps</span>
     </div>
     <div class="d-flex align-items-center m-0 p-2 small">
         <img src="asset/img/invest.svg" alt="coin" height="24px" class="me-2">
-        <span class="text-dark fw-bold">investors</span>
+        <span class="text-muted fw-bold">Investors</span>
     </div>
     <div class="d-flex align-items-center m-0 p-2 small">
         <img src="asset/img/task.svg" alt="coin" height="24px" class="me-2">
-        <span class="text-dark fw-bold">tasks</span>
+        <span class="text-muted fw-bold">Tasks</span>
     </div>
 </div>
 

@@ -3,9 +3,44 @@ let Application = Vue.createApp({
         return {
             telegram_data: {},
 
-            tmp_btn_count: [1],
-            user_data: {
-                coins: 0,
+            game_data: {
+                "user_id": 4,
+                "telegram_id": 9876543210,
+                "last_seen": 1719341593,
+                "current_coins": 240,
+                "current_gold": 0,
+                "products": {
+                    "1": {
+                        "id": 1,
+                        "name": "BTC Exchange",
+                        "image_url": "https://www.svgrepo.com/show/289569/exchange-euro.svg",
+                        "upgrade_price": 4633,
+                        "coins_per_click": 13,
+                        "coins_per_minute": 13,
+                        "current_level": 1,
+                        "max_level": 100
+                    },
+                    "2": {
+                        "id": 2,
+                        "name": "Currency mapping",
+                        "image_url": "https://www.svgrepo.com/show/430187/solution-bulb-concept.svg",
+                        "upgrade_price": 2155,
+                        "coins_per_click": 0,
+                        "coins_per_minute": 0,
+                        "current_level": 0,
+                        "max_level": 100
+                    },
+                    "3": {
+                        "id": 3,
+                        "name": "Crypto Stock",
+                        "image_url": "https://www.svgrepo.com/show/493504/stockfx-chart.svg",
+                        "upgrade_price": 17630,
+                        "coins_per_click": 0,
+                        "coins_per_minute": 0,
+                        "current_level": 0,
+                        "max_level": 100
+                    }
+                }
             },
         }
     },
@@ -16,7 +51,7 @@ let Application = Vue.createApp({
 
             axios.get(url).then(response => {
                 console.log(response.data)
-                this.user_data = response.data
+                this.game_data = response.data
             }).catch(error => {
                 console.log(error)
             })
@@ -27,7 +62,7 @@ let Application = Vue.createApp({
 
             axios.get(url).then(response => {
                 console.log(response.data)
-                this.user_data = response.data
+                this.game_data = response.data
             }).catch(error => {
                 console.log(error)
             })
@@ -38,7 +73,7 @@ let Application = Vue.createApp({
 
             axios.get(url).then(response => {
                 console.log(response.data)
-                this.user_data = response.data
+                this.game_data = response.data
             }).catch(error => {
                 console.log(error)
             })
@@ -68,7 +103,8 @@ let Application = Vue.createApp({
 
     mounted: function () {
         while (window.Telegram.WebApp.initDataUnsafe === undefined) {
-            setTimeout(() => {}, 10)
+            setTimeout(() => {
+            }, 10)
         }
 
         this.telegram_data = {...window.Telegram?.WebApp?.initDataUnsafe}
