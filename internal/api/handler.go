@@ -1,11 +1,15 @@
 package api
 
 import (
-	"github.com/adzpm/telegram-clicker/internal/math"
-	"github.com/adzpm/telegram-clicker/internal/model"
+	"errors"
+	"gorm.io/gorm"
+	"time"
+
 	fiber "github.com/gofiber/fiber/v2"
 	zap "go.uber.org/zap"
-	"time"
+
+	"github.com/adzpm/telegram-clicker/internal/math"
+	"github.com/adzpm/telegram-clicker/internal/model"
 )
 
 func Throw500Error(c *fiber.Ctx, dst interface{}) (err error) {
@@ -37,13 +41,17 @@ func (a *API) Enter(c *fiber.Ctx) (err error) {
 	a.lgr.Info("try to enter game", zap.Int("telegram_id", tgID))
 
 	if user, err = a.str.SelectUser(uint64(tgID)); err != nil {
-		a.lgr.Warn("error while selecting user. Try to create new account", zap.Error(err))
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			a.lgr.Warn("error while selecting user. Try to create new account", zap.Error(err))
 
-		if user, err = a.str.InsertUser(uint64(tgID)); err != nil {
-			return Throw500Error(c, err.Error())
-		}
+			if user, err = a.str.InsertUser(uint64(tgID)); err != nil {
+				return Throw500Error(c, err.Error())
+			}
 
-		if _, err = a.str.InsertUserProduct(user.ID, 1, 1); err != nil {
+			if _, err = a.str.InsertUserProduct(user.ID, 1, 1); err != nil {
+				return Throw500Error(c, err.Error())
+			}
+		} else {
 			return Throw500Error(c, err.Error())
 		}
 	}
@@ -56,19 +64,18 @@ func (a *API) Enter(c *fiber.Ctx) (err error) {
 		coinsToAdd     uint64
 	)
 
-	// calculate coins for offline time
+	if allProducts, err = a.str.SelectProducts(); err != nil {
+		return Throw500Error(c, err.Error())
+	}
+
+	if userProducts, err = a.str.SelectUserProducts(user.ID); err != nil {
+		return Throw500Error(c, err.Error())
+	}
+
 	if user.LastSeen != 0 {
 		// if user was offline more than 60 minutes, we will calculate only 60 minutes
 		if offlineMinutes > 60 {
 			offlineMinutes = 60
-		}
-
-		if allProducts, err = a.str.SelectProducts(); err != nil {
-			return Throw500Error(c, err.Error())
-		}
-
-		if userProducts, err = a.str.SelectUserProducts(user.ID); err != nil {
-			return Throw500Error(c, err.Error())
 		}
 
 		for _, product := range allProducts {

@@ -9,10 +9,10 @@ type (
 	}
 
 	UserProduct struct {
-		ID        uint64 `json:"id"`
-		UserID    uint64 `json:"user_id"`
-		ProductID uint64 `json:"product_id"`
-		Level     uint64 `json:"level"`
+		ID         uint64 `json:"id"`
+		TelegramID uint64 `json:"telegram_id"`
+		ProductID  uint64 `json:"product_id"`
+		Level      uint64 `json:"level"`
 	}
 
 	Product struct {
