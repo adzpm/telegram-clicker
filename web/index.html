@@ -30,27 +30,37 @@
 </div>
 
 <div class="container d-flex flex-column gap-3" style="padding: 7em 0 4em 0">
-    <div class="d-flex w-100 gap-4" v-for="product in game_data.products">
-        <div class="d-flex flex-column gap-2 align-items-center" @click="Click(TelegramID, product.id)">
-            <div class="animate__animated animate__heartBeat animate__infinite">
-                <img v-bind:src="product.image_url" class="rounded-4 border border-dark border-1 p-2"
-                     alt="img" height="72px" width="72px">
+    <div v-for="product in game_data.products">
+        <div class="d-flex w-100 gap-4" v-if="product.current_level>0">
+            <div class="d-flex flex-column gap-2 align-items-center" @click="Click(TelegramID, product.id)">
+                <div class="animate__animated animate__heartBeat animate__infinite">
+                    <img v-bind:src="product.image_url" class="rounded-4 border border-dark border-1 p-2"
+                         alt="img" height="72px" width="72px">
+                </div>
+                <span class="fw-bold text-secondary small">LVL {{ product.current_level }}</span>
             </div>
-            <span class="fw-bold text-secondary small">LVL {{ product.current_level }}</span>
+            <div class="row row-cols-2 flex-grow-1">
+                <span class="text-dark fw-bold">{{ product.name }}</span>
+                <div class="d-flex align-items-center m-0 p-2">
+                    <img src="asset/img/coin.svg" alt="coin" height="18px" class="me-2">
+                    <span class="text-dark fw-bold">{{ product.coins_per_click }} per click</span>
+                </div>
+                <div class="col-12 px-2 d-flex flex-column gap-1">
+                    <a class="btn btn-outline-dark fw-bold w-100" @click="BuyProduct(TelegramID, product.id)">
+                        <span class="text-uppercase me-2">BUY</span>
+                        <img src="asset/img/coin.svg" alt="coin" height="18px" class="me-1">
+                        <span class="">{{ product.upgrade_price }}</span>
+                    </a>
+                </div>
+            </div>
         </div>
-        <div class="row row-cols-2 flex-grow-1">
-            <span class="text-dark fw-bold">{{ product.name }}</span>
-            <div class="d-flex align-items-center m-0 p-2">
-                <img src="asset/img/coin.svg" alt="coin" height="18px" class="me-2">
-                <span class="text-dark fw-bold">{{ product.coins_per_click }} per click</span>
-            </div>
-            <div class="col-12 px-2 d-flex flex-column gap-1">
-                <a class="btn btn-outline-dark fw-bold w-100" @click="BuyProduct(TelegramID, product.id)">
-                    <span class="text-uppercase me-2">BUY</span>
-                    <img src="asset/img/coin.svg" alt="coin" height="18px" class="me-1">
-                    <span class="">{{ product.upgrade_price }}</span>
-                </a>
-            </div>
+        <div class="text-center" v-else>
+            <p class="text-dark fw-bold p-0 m-0 mb-2">{{ product.name }}</p>
+            <a class="btn btn-outline-dark fw-bold w-100" @click="BuyProduct(TelegramID, product.id)">
+                <span class="text-uppercase me-2">UNLOCK</span>
+                <img src="asset/img/coin.svg" alt="coin" height="18px" class="me-1">
+                <span class="">{{ product.upgrade_price }}</span>
+            </a>
         </div>
     </div>
 </div>
