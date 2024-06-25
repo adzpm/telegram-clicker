@@ -48,7 +48,7 @@ func (a *API) Enter(c *fiber.Ctx) (err error) {
 				return Throw500Error(c, err.Error())
 			}
 
-			if _, err = a.str.InsertUserProduct(user.ID, 1, 1); err != nil {
+			if _, err = a.str.InsertUserProduct(user.TelegramID, 1, 1); err != nil {
 				return Throw500Error(c, err.Error())
 			}
 		} else {
@@ -57,45 +57,20 @@ func (a *API) Enter(c *fiber.Ctx) (err error) {
 	}
 
 	var (
-		timeNow        = uint64(time.Now().Unix())
-		offlineMinutes = timeNow - user.LastSeen/60
-		allProducts    []model.Product
-		userProducts   []model.UserProduct
-		coinsToAdd     uint64
+		timeNow      = uint64(time.Now().Unix())
+		allProducts  []model.Product
+		userProducts []model.UserProduct
 	)
 
 	if allProducts, err = a.str.SelectProducts(); err != nil {
 		return Throw500Error(c, err.Error())
 	}
 
-	if userProducts, err = a.str.SelectUserProducts(user.ID); err != nil {
+	if userProducts, err = a.str.SelectUserProducts(user.TelegramID); err != nil {
 		return Throw500Error(c, err.Error())
 	}
 
-	if user.LastSeen != 0 {
-		// if user was offline more than 60 minutes, we will calculate only 60 minutes
-		if offlineMinutes > 60 {
-			offlineMinutes = 60
-		}
-
-		for _, product := range allProducts {
-			for _, userProduct := range userProducts {
-				if product.ID == userProduct.ProductID {
-					coinsToAdd += math.CalculateCoinsPerMinute(
-						product.StartCoins,
-						userProduct.Level,
-						product.CoinsMultiplier,
-					) * offlineMinutes
-				}
-			}
-		}
-
-		finalCoins := user.Coins + coinsToAdd
-
-		if user, err = a.str.UpdateUserCoins(user.TelegramID, finalCoins); err != nil {
-			return Throw500Error(c, err.Error())
-		}
-	}
+	// add coins for offline time
 
 	if user, err = a.str.UpdateUserLastSeen(user.TelegramID, timeNow); err != nil {
 		return Throw500Error(c, err.Error())
