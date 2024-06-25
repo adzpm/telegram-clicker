@@ -11,13 +11,14 @@ func CalculateCoinsPerClick(startCoins, level uint64, coinsMultiplier float64) u
 
 	// example:
 	//
-	// startCoins = 1, coinsMultiplier = 2, level = 2
-	// then current coins perClick:
-	// 1 * 2 * 2 = 4
-	// startCoins = 1, coinsMultiplier = 2, level = 3
-	// 1 * 2 * 3 = 6
+	// startCoins = 2, coinsMultiplier = 2, level = 1
+	// 2 * 2 * 1 = 4
+	// startCoins = 2, coinsMultiplier = 2, level = 2
+	// 2 * 2 * 2 = 8
+	// startCoins = 2, coinsMultiplier = 2, level = 3
+	// 2 * 2 * 3 = 12
 
-	return uint64(float64(startCoins) * coinsMultiplier * float64(level))
+	return uint64(float64(startCoins) * coinsMultiplier * float64(level-1))
 }
 
 func CalculateUpgradePrice(startPrice, level uint64, priceMultiplier float64) uint64 {
@@ -33,5 +34,5 @@ func CalculateUpgradePrice(startPrice, level uint64, priceMultiplier float64) ui
 	// startPrice = 10, priceMultiplier = 1.5, level = 2
 	// 10 * 2.5 * 3 = 75
 
-	return uint64(float64(startPrice) * priceMultiplier * float64(level+1))
+	return uint64(float64(startPrice) * priceMultiplier * float64(level))
 }
