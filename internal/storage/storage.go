@@ -268,13 +268,13 @@ func (s *Storage) InsertProduct(name, imageURL string,
 	)
 
 	res := s.str.Table("products").Create(&model.Product{
-		Name:               name,
-		ImageURL:           imageURL,
-		StartPrice:         startPrice,
-		PriceMultiplier:    priceMultiplier,
-		StartCoinsPerClick: startCoinsPerClick,
-		CoinsMultiplier:    coinsMultiplier,
-		MaxLevel:           maxLevel,
+		Name:                    name,
+		ImageURL:                imageURL,
+		StartProductPrice:       startPrice,
+		ProductPriceMultiplier:  priceMultiplier,
+		StartCoinsPerClick:      startCoinsPerClick,
+		CoinsPerClickMultiplier: coinsMultiplier,
+		MaxLevel:                maxLevel,
 	})
 
 	if res.Error != nil {

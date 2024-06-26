@@ -25,7 +25,7 @@ func CalculateCoinsPerClick(startCoins, level uint64, coinsMultiplier float64) u
 
 // CalculateUpgradePrice calculates the price of the upgrade to the next level.
 func CalculateUpgradePrice(startPrice, level uint64, priceMultiplier float64) uint64 {
-	if level == 0 {
+	if level < 1 {
 		return startPrice
 	}
 

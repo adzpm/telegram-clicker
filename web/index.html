@@ -31,24 +31,36 @@
 
 <div class="container d-flex flex-column gap-3" style="padding: 7em 0 4em 0">
     <div v-for="product in game_data.products">
-        <div class="d-flex w-100 gap-4" v-if="product.current_level>0">
-            <div class="d-flex flex-column gap-2 align-items-center" @click="Click(TelegramID, product.id); PopEffect($event)">
+        <div class="d-flex w-100 gap-3" v-if="product.current_level>0">
+            <div class="d-flex flex-column gap-2 align-items-center"
+                 @click="Click(TelegramID, product.id); PopEffect($event)">
                 <div class="animate__animated animate__heartBeat animate__infinite">
                     <img v-bind:src="product.image_url" class="rounded-4 border border-dark border-1"
-                         alt="img" height="72px" width="72px">
+                         alt="img" height="96px" width="96px">
                 </div>
                 <span class="fw-bold text-secondary small">LVL {{ product.current_level }}</span>
             </div>
-            <div class="row row-cols-2 flex-grow-1">
-                <span class="text-dark fw-bold">{{ product.name }}</span>
-                <div class="d-flex align-items-center m-0 p-2">
-                    <img src="asset/img/coin.svg" alt="coin" height="18px" class="me-2">
-                    <span class="text-dark fw-bold">{{ product.coins_per_click }} per click</span>
+            <div class="bg-light d-flex flex-column flex-grow-1 gap-1">
+                <span class="fw-bolder fs-5 text-uppercase">{{ product.name }}</span>
+                <div class="d-flex align-items-center justify-content-between m-0 p-0 small">
+                    <span class="text-dark fw-bold me-2">Current:</span>
+                    <div class="d-flex align-items-center m-0 p-0 font-monospace">
+                        <img src="asset/img/coin.svg" alt="coin" height="18px" class="me-2">
+                        <span class="text-dark fw-bold">{{ product.current_coins_per_click }} per click</span>
+                    </div>
                 </div>
-                <div class="col-12 px-2 d-flex flex-column gap-1">
-                    <a class="btn btn-outline-dark fw-bold w-100" @click="BuyProduct(TelegramID, product.id)">
+                <div class="d-flex align-items-center justify-content-between m-0 p-0 small">
+                    <span class="text-dark fw-bold me-2">Next:</span>
+                    <div class="d-flex align-items-center m-0 p-0 font-monospace">
+                        <img src="asset/img/coin.svg" alt="coin" height="18px" class="me-2">
+                        <span class="text-dark fw-bold">{{ product.next_level_coins_per_click }} per click</span>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center justify-content-between m-0 p-0">
+                    <a class="btn btn-lg btn-outline-dark fw-bold w-100 d-flex align-items-center justify-content-center"
+                       @click="BuyProduct(TelegramID, product.id)">
                         <span class="text-uppercase me-2">BUY</span>
-                        <img src="asset/img/coin.svg" alt="coin" height="18px" class="me-1">
+                        <img src="asset/img/coin.svg" alt="coin" height="22px" class="me-1">
                         <span class="">{{ product.upgrade_price }}</span>
                     </a>
                 </div>
