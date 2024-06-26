@@ -31,16 +31,16 @@
 
 <div class="container d-flex flex-column gap-3" style="padding: 7em 0 4em 0">
     <div v-for="product in game_data.products">
-        <div class="d-flex w-100 gap-3" v-if="product.current_level>0">
+        <div class="d-flex w-100 gap-3" v-if="product.current_level > 0">
             <div class="d-flex flex-column gap-2 align-items-center"
                  @click="Click(TelegramID, product.id); PopEffect($event)">
-                <div class="animate__animated animate__heartBeat animate__infinite">
+                <div class="animate__animated animate__headShake animate__infinite">
                     <img v-bind:src="product.image_url" class="rounded-4 border border-dark border-1"
                          alt="img" height="96px" width="96px">
                 </div>
                 <span class="fw-bold text-secondary small">LVL {{ product.current_level }}</span>
             </div>
-            <div class="bg-light d-flex flex-column flex-grow-1 gap-1">
+            <div class="d-flex flex-column flex-grow-1 gap-1">
                 <span class="fw-bolder fs-5 text-uppercase">{{ product.name }}</span>
                 <div class="d-flex align-items-center justify-content-between m-0 p-0 small">
                     <span class="text-dark fw-bold me-2">Current:</span>
@@ -66,8 +66,11 @@
                 </div>
             </div>
         </div>
-        <div class="text-center" v-else>
-            <p class="text-dark fw-bold p-0 m-0 mb-2">{{ product.name }}</p>
+        <div class="" v-else>
+            <p class="fw-bolder fs-5 text-uppercase p-0 m-0 mb-2">
+                <span class="me-2">{{ product.name }}</span>
+                <span class="text-body-tertiary float-end">LVL {{ product.current_level }}</span>
+            </p>
             <a class="btn btn-outline-dark fw-bold w-100" @click="BuyProduct(TelegramID, product.id)">
                 <span class="text-uppercase me-2">UNLOCK</span>
                 <img src="asset/img/coin.svg" alt="coin" height="18px" class="me-1">
@@ -84,11 +87,11 @@
     </div>
     <div class="d-flex align-items-center m-0 p-2 small">
         <img src="asset/img/invest.svg" alt="coin" height="24px" class="me-2">
-        <span class="text-muted fw-bold">Investors</span>
+        <span class="text-body-tertiary fw-bold">Investors</span>
     </div>
     <div class="d-flex align-items-center m-0 p-2 small">
         <img src="asset/img/task.svg" alt="coin" height="24px" class="me-2">
-        <span class="text-muted fw-bold">Tasks</span>
+        <span class="text-body-tertiary fw-bold">Tasks</span>
     </div>
 </div>
 
