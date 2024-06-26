@@ -149,7 +149,7 @@ func (a *API) Enter(c *fiber.Ctx) (err error) {
 	return c.Status(200).JSON(response)
 }
 
-func (a *API) Click(c *fiber.Ctx) (err error) {
+func (a *API) ClickProduct(c *fiber.Ctx) (err error) {
 	var (
 		tgID int
 		prID int
@@ -202,6 +202,114 @@ func (a *API) Click(c *fiber.Ctx) (err error) {
 	)
 
 	if allProducts, err = a.str.SelectProducts(); err != nil {
+		return Throw500Error(c, err.Error())
+	}
+
+	if userProducts, err = a.str.SelectUserProducts(user.TelegramID); err != nil {
+		return Throw500Error(c, err.Error())
+	}
+
+	response := &model.Game{
+		UserID:       user.ID,
+		TelegramID:   user.TelegramID,
+		LastSeen:     user.LastSeen,
+		CurrentCoins: user.Coins,
+		Products:     mergeProducts(allProducts, userProducts),
+	}
+
+	return c.Status(200).JSON(response)
+}
+
+func (a *API) BuyProduct(c *fiber.Ctx) (err error) {
+	var (
+		tgID int
+		prID int
+	)
+
+	if tgID = c.QueryInt("telegram_id"); tgID == 0 {
+		return Throw400Error(c, "telegram_id is required")
+	}
+
+	if prID = c.QueryInt("product_id"); prID == 0 {
+		return Throw400Error(c, "product_id is required")
+	}
+
+	a.lgr.Info("try to buy product", zap.Int("telegram_id", tgID), zap.Int("product_id", prID))
+
+	var (
+		user         *model.User
+		product      *model.Product
+		userProduct  *model.UserProduct
+		allProducts  []model.Product
+		userProducts []model.UserProduct
+	)
+
+	if user, err = a.str.SelectUser(uint64(tgID)); err != nil {
+		return Throw500Error(c, err.Error())
+	}
+
+	if product, err = a.str.SelectProduct(uint64(prID)); err != nil {
+		return Throw500Error(c, err.Error())
+	}
+
+	if allProducts, err = a.str.SelectProducts(); err != nil {
+		return Throw500Error(c, err.Error())
+	}
+
+	if userProducts, err = a.str.SelectUserProducts(user.TelegramID); err != nil {
+		return Throw500Error(c, err.Error())
+
+	}
+
+	if userProduct, err = a.str.SelectUserProduct(user.TelegramID, product.ID); err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			priceToBuy := math.CalculateUpgradePrice(product.StartProductPrice, 0, product.ProductPriceMultiplier)
+
+			if user.Coins < priceToBuy {
+				return Throw400Error(c, "not enough coins")
+			}
+
+			if userProduct, err = a.str.InsertUserProduct(user.TelegramID, product.ID, 1); err != nil {
+				return Throw500Error(c, err.Error())
+			}
+
+			if user, err = a.str.UpdateUserCoins(user.TelegramID, user.Coins-priceToBuy); err != nil {
+				return Throw500Error(c, err.Error())
+			}
+
+			if userProducts, err = a.str.SelectUserProducts(user.TelegramID); err != nil {
+				return Throw500Error(c, err.Error())
+			}
+
+			response := &model.Game{
+				UserID:       user.ID,
+				TelegramID:   user.TelegramID,
+				LastSeen:     user.LastSeen,
+				CurrentCoins: user.Coins,
+				Products:     mergeProducts(allProducts, userProducts),
+			}
+
+			return c.Status(200).JSON(response)
+		} else {
+			return Throw500Error(c, err.Error())
+		}
+	}
+
+	priceToBuy := math.CalculateUpgradePrice(
+		product.StartProductPrice,
+		userProduct.Level,
+		product.ProductPriceMultiplier,
+	)
+
+	if user.Coins < priceToBuy {
+		return Throw400Error(c, "not enough coins")
+	}
+
+	if user, err = a.str.UpdateUserCoins(user.TelegramID, user.Coins-priceToBuy); err != nil {
+		return Throw500Error(c, err.Error())
+	}
+
+	if userProduct, err = a.str.UpdateUserProductLevel(user.TelegramID, product.ID, userProduct.Level+1); err != nil {
 		return Throw500Error(c, err.Error())
 	}
 

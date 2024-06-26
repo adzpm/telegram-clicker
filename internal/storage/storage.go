@@ -249,46 +249,6 @@ func (s *Storage) UpdateUserProductLevel(telegramID, productID, level uint64) (*
 	return userProduct, nil
 }
 
-// InsertProduct - TODO: FIX THIS
-func (s *Storage) InsertProduct(name, imageURL string,
-	startPrice uint64,
-	priceMultiplier float64,
-	startCoinsPerClick uint64,
-	coinsMultiplier float64,
-	maxLevel uint64,
-) (*model.Product, error) {
-	s.lgr.Info("inserting product",
-		zap.String("name", name),
-		zap.String("image_url", imageURL),
-		zap.Uint64("start_price", startPrice),
-		zap.Float64("price_multiplier", priceMultiplier),
-		zap.Uint64("start_coins_per_click", startCoinsPerClick),
-		zap.Float64("coins_multiplier", coinsMultiplier),
-		zap.Uint64("max_level", maxLevel),
-	)
-
-	res := s.str.Table("products").Create(&model.Product{
-		Name:                    name,
-		ImageURL:                imageURL,
-		StartProductPrice:       startPrice,
-		ProductPriceMultiplier:  priceMultiplier,
-		StartCoinsPerClick:      startCoinsPerClick,
-		CoinsPerClickMultiplier: coinsMultiplier,
-		MaxLevel:                maxLevel,
-	})
-
-	if res.Error != nil {
-		return nil, res.Error
-	}
-
-	product, err := s.SelectProduct(uint64(res.RowsAffected))
-	if err != nil {
-		return nil, err
-	}
-
-	return product, nil
-}
-
 func (s *Storage) SelectProduct(productID uint64) (*model.Product, error) {
 	s.lgr.Info("selecting product", zap.Uint64("product_id", productID))
 
