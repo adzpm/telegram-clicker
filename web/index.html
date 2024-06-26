@@ -32,9 +32,9 @@
 <div class="container d-flex flex-column gap-3" style="padding: 7em 0 4em 0">
     <div v-for="product in game_data.products">
         <div class="d-flex w-100 gap-4" v-if="product.current_level>0">
-            <div class="d-flex flex-column gap-2 align-items-center" @click="Click(TelegramID, product.id)">
+            <div class="d-flex flex-column gap-2 align-items-center" @click="Click(TelegramID, product.id); PopEffect($event)">
                 <div class="animate__animated animate__heartBeat animate__infinite">
-                    <img v-bind:src="product.image_url" class="rounded-4 border border-dark border-1 p-2"
+                    <img v-bind:src="product.image_url" class="rounded-4 border border-dark border-1"
                          alt="img" height="72px" width="72px">
                 </div>
                 <span class="fw-bold text-secondary small">LVL {{ product.current_level }}</span>

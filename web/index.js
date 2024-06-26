@@ -78,6 +78,34 @@ let Application = Vue.createApp({
                 console.log(error)
             })
         },
+
+        // non-api methods
+
+        PopEffect: function (e) {
+            for (let i = 0; i < 5; i++) {
+                this.createParticle(e.clientX, e.clientY);
+            }
+        },
+
+        createParticle: function (x, y) {
+            let destinationX = x + (Math.random() - 0.5) * 2 * 75,
+                destinationY = y + (Math.random() - 0.5) * 2 * 75,
+                particle = document.createElement('particle'),
+                symbols = ['$', '$', '$']
+
+            document.body.appendChild(particle);
+            particle.innerHTML = symbols[Math.floor(Math.random() * symbols.length)]
+            particle.style.fontSize = `${Math.random() * 24 + 10}px`;
+
+            let animation = particle.animate([
+                {transform: `translate(-50%, -50%) translate(${x}px, ${y}px)`, opacity: 1},
+                {transform: `translate(${destinationX}px, ${destinationY}px)`, opacity: 0}
+            ], {duration: Math.floor(Math.random() * 100 + 1000), easing: 'ease-out'})
+
+            animation.onfinish = () => {
+                particle.remove()
+            }
+        },
     },
 
     computed: {

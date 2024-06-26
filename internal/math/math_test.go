@@ -10,14 +10,15 @@ func TestCalculateCoinsPerClick(t *testing.T) {
 
 		expected uint64
 	}{
-		"level 0 / start 2": {2, 0, 2, 0},
-		"level 1 / start 2": {2, 1, 2, 2},
-		"level 2 / start 2": {2, 2, 2, 4},
-		"level 3 / start 2": {2, 3, 2, 8},
-		"level 4 / start 2": {2, 4, 2, 12},
-		"level 5 / start 2": {2, 5, 2, 16},
-		"level 6 / start 2": {2, 6, 2, 20},
-		"level 7 / start 2": {2, 7, 2, 24},
+		"level 0 / start 1": {1, 0, 2.1, 0},
+		"level 1 / start 1": {1, 1, 2.1, 1},
+		"level 2 / start 1": {1, 2, 2.1, 2},
+		"level 3 / start 1": {1, 3, 2.1, 4},
+		"level 4 / start 1": {1, 4, 2.1, 8},
+		"level 5 / start 1": {1, 5, 2.1, 16},
+		"level 6 / start 1": {1, 6, 2.1, 33},
+		"level 7 / start 1": {1, 7, 2.1, 69},
+		"level 8 / start 1": {1, 8, 2.1, 144},
 	}
 
 	for name, tc := range testCases {
@@ -38,14 +39,19 @@ func TestCalculateUpgradePrice(t *testing.T) {
 
 		expected uint64
 	}{
-		"level 0 / start 100": {100, 0, 2, 100},
-		"level 1 / start 100": {100, 1, 2, 200},
-		"level 2 / start 100": {100, 2, 2, 400},
-		"level 3 / start 100": {100, 3, 2, 600},
-		"level 4 / start 100": {100, 4, 2, 800},
-		"level 5 / start 100": {100, 5, 2, 1000},
-		"level 6 / start 100": {100, 6, 2, 1200},
-		"level 7 / start 100": {100, 7, 2, 1400},
+		"level 0 / start 100": {100, 0, 1.5, 100},
+		"level 1 / start 100": {100, 1, 1.5, 150},
+		"level 2 / start 100": {100, 2, 1.5, 225},
+		"level 3 / start 100": {100, 3, 1.5, 337},
+		"level 4 / start 100": {100, 4, 1.5, 505},
+		"level 5 / start 100": {100, 5, 1.5, 757},
+		"level 6 / start 100": {100, 6, 1.5, 1135},
+		"level 7 / start 100": {100, 7, 1.5, 1702},
+		"level 8 / start 100": {100, 8, 1.5, 2553},
+
+		"case 1": {100, 1, 2.2, 440},
+		"case 2": {100, 2, 2.2, 968},
+		"case 3": {100, 3, 2.2, 2129},
 	}
 
 	for name, tc := range testCases {

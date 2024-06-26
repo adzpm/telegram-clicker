@@ -16,37 +16,53 @@ func mergeProducts(
 	allProducts []model.Product,
 	userProducts []model.UserProduct,
 ) map[uint64]*model.GameProduct {
-	products := make(map[uint64]*model.GameProduct)
+	var (
+		products        = make(map[uint64]*model.GameProduct, len(allProducts))
+		allProductsMap  = make(map[uint64]*model.Product, len(allProducts))
+		userProductsMap = make(map[uint64]*model.UserProduct, len(userProducts))
+	)
 
+	// prepare allProducts map
+	for _, product := range allProducts {
+		allProductsMap[product.ID] = &product
+	}
+
+	// prepare userProducts map
+	for _, userProduct := range userProducts {
+		userProductsMap[userProduct.ProductID] = &userProduct
+	}
+
+	// fill products map
 	for _, product := range allProducts {
 		products[product.ID] = &model.GameProduct{
 			ID:             product.ID,
 			Name:           product.Name,
 			ImageURL:       product.ImageURL,
-			UpgradePrice:   math.CalculateUpgradePrice(product.StartPrice, 0, product.PriceMultiplier),
-			CoinsPerClick:  math.CalculateCoinsPerClick(product.StartCoins, 0, product.CoinsMultiplier),
+			UpgradePrice:   product.StartPrice,
+			CoinsPerClick:  product.StartCoinsPerClick,
 			CoinsPerMinute: 0, // TODO: IMPLEMENT THIS
 			CurrentLevel:   0, // TODO: IMPLEMENT THIS
 			MaxLevel:       product.MaxLevel,
 		}
 	}
 
+	// update products map with userProducts data
 	for _, userProduct := range userProducts {
-		products[userProduct.ProductID].CurrentLevel = userProduct.Level
-
-		products[userProduct.ProductID].UpgradePrice = math.CalculateUpgradePrice(
-			allProducts[userProduct.ProductID].StartPrice,
-			products[userProduct.ProductID].CurrentLevel,
-			allProducts[userProduct.ProductID].PriceMultiplier,
+		var (
+			productID          = userProduct.ProductID
+			level              = userProduct.Level
+			startPrice         = allProductsMap[productID].StartPrice
+			startCoinsPerClick = allProductsMap[productID].StartCoinsPerClick
+			priceMp            = allProductsMap[productID].PriceMultiplier
+			coinsMp            = allProductsMap[productID].CoinsMultiplier
+			resPrice           = math.CalculateUpgradePrice(startPrice, level, priceMp)
+			resCoins           = math.CalculateCoinsPerClick(startCoinsPerClick, level, coinsMp)
 		)
 
-		products[userProduct.ProductID].CoinsPerClick = math.CalculateCoinsPerClick(
-			allProducts[userProduct.ProductID].StartCoins,
-			products[userProduct.ProductID].CurrentLevel,
-			allProducts[userProduct.ProductID].CoinsMultiplier,
-		)
-
-		products[userProduct.ProductID].CoinsPerMinute = 0 // TODO: IMPLEMENT THIS
+		products[productID].CurrentLevel = level
+		products[productID].UpgradePrice = resPrice
+		products[productID].CoinsPerClick = resCoins
+		products[productID].CoinsPerMinute = 0 // TODO: IMPLEMENT THIS
 	}
 
 	return products
@@ -166,7 +182,7 @@ func (a *API) Click(c *fiber.Ctx) (err error) {
 	}
 
 	if userProduct.Level > 0 {
-		coinsClicked = math.CalculateCoinsPerClick(product.StartCoins, userProduct.Level, product.CoinsMultiplier)
+		coinsClicked = math.CalculateCoinsPerClick(product.StartCoinsPerClick, userProduct.Level, product.CoinsMultiplier)
 	}
 
 	if user, err = a.str.UpdateUserCoins(user.TelegramID, user.Coins+coinsClicked); err != nil {
