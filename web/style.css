@@ -6,7 +6,6 @@
 :root {
     --app-bg-color: #F6F3EE;
     --app-gold: #DAA520;
-    --app-gold-rgb: 218, 165, 32;
 }
 
 body {
@@ -16,8 +15,7 @@ body {
 
 
 .text-gold {
-    --bs-text-opacity: 1;
-    color: rgba(var(--app-gold-rgb), var(--bs-text-opacity)) !important;
+    color: var(--app-gold) !important;
 }
 
 particle {
@@ -27,4 +25,15 @@ particle {
     border-radius: 50%;
     pointer-events: none;
     opacity: 0;
+}
+
+.toast-enter-active,
+.toast-leave-active {
+    transition: all .3s ease;
+}
+
+.toast-enter-from,
+.toast-leave-to {
+    opacity: 0;
+    transform: translateY(-50%);
 }

@@ -13,7 +13,7 @@
     <script src="pkg/vue.global.prod.js"></script>
     <script src="pkg/countup.min.js"></script>
 </head>
-<body class="p-3 vh-100" id="app">
+<body class="vh-100" id="app">
 
 <div v-if="game_data !== null">
     <div class="p-3 navbar fixed-top gap-3 bg-body-tertiary border-bottom border-dark shadow">
@@ -38,7 +38,7 @@
         </div>
     </div>
 
-    <div class="container d-flex flex-column gap-3" style="padding: 7.5em 0 5em 0">
+    <div class="container d-flex flex-column gap-3 px-3" style="padding: 8em 0 4.5em 0">
         <div v-for="product in game_data.products">
             <div class="d-flex w-100 gap-3" v-if="product.current_level > 0">
                 <div class="d-flex flex-column gap-2 align-items-center"
@@ -66,22 +66,22 @@
                         </div>
                     </div>
                     <div class="d-flex align-items-center justify-content-between m-0 p-0">
-                        <a v-bind:class="'btn btn-lg btn-success fw-bold w-100 d-flex align-items-center justify-content-center' + (product.upgrade_price > game_data.current_coins ? ' disabled' : '')"
+                        <a v-bind:class="'btn btn-lg btn-success fw-bold w-100 d-flex align-items-center justify-content-center' + (product.upgrade_price > game_data.current_coins ? ' disabled' : ' animate__animated animate__headShake animate__infinite')"
                            @click="BuyProduct(TelegramID, product.id)">
                             <span class="text-uppercase me-1">BUY</span>
                             <img src="asset/img/coin.svg" alt="coin" height="22px" class="me-1">
-                            <span class="">{{ FormatNumber(product.upgrade_price) }}</span>
+                            <span class="text-truncate">{{ FormatNumber(product.upgrade_price) }}</span>
                         </a>
                     </div>
                 </div>
             </div>
             <div class="" v-else>
                 <span class="fw-bolder text-uppercase d-block mb-2 text-truncate">{{ product.name }}</span>
-                <a v-bind:class="'btn btn-lg btn-success fw-bold w-100' + (product.upgrade_price > game_data.current_coins ? ' disabled' : '')"
+                <a v-bind:class="'btn btn-lg btn-success fw-bold w-100 d-flex align-items-center justify-content-center' + (product.upgrade_price > game_data.current_coins ? ' disabled' : ' animate__animated animate__headShake animate__infinite')"
                    @click="BuyProduct(TelegramID, product.id)">
                     <span class="text-uppercase me-1">UNLOCK</span>
-                    <img src="asset/img/coin.svg" alt="coin" height="18px" class="me-1">
-                    <span class="">{{ FormatNumber(product.upgrade_price) }}</span>
+                    <img src="asset/img/coin.svg" alt="coin" height="22px" class="me-1">
+                    <span class="text-truncate">{{ FormatNumber(product.upgrade_price) }}</span>
                 </a>
             </div>
         </div>
@@ -101,6 +101,16 @@
             <span class="text-body-tertiary fw-bold">Tasks</span>
         </div>
     </div>
+
+    <Transition name="toast" mode="out-in" appear>
+        <div class="position-fixed top-0 w-100 p-3" style="z-index: 9999" v-if="error">
+            <div class="card text-bg-danger">
+                <div class="card-body">
+                    <code class="text-white">{{ error }}</code>
+                </div>
+            </div>
+        </div>
+    </Transition>
 </div>
 
 <div class="d-flex justify-content-center align-items-center flex-column h-100" v-else>

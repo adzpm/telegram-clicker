@@ -4,6 +4,7 @@ let Application = Vue.createApp({
             started_from_telegram: false,
             telegram_data: null,
             game_data: null,
+            error: null,
         }
     },
 
@@ -15,7 +16,7 @@ let Application = Vue.createApp({
                 console.log(response.data)
                 this.game_data = response.data
             }).catch(error => {
-                console.log(error)
+                this.ShowError(error.response.data)
             })
         },
 
@@ -26,7 +27,7 @@ let Application = Vue.createApp({
                 console.log(response.data)
                 this.game_data = response.data
             }).catch(error => {
-                console.log(error)
+                this.ShowError(error.response.data)
             })
         },
 
@@ -37,11 +38,18 @@ let Application = Vue.createApp({
                 console.log(response.data)
                 this.game_data = response.data
             }).catch(error => {
-                console.log(error)
+                this.ShowError(error.response.data)
             })
         },
 
         // non-api methods
+
+        ShowError(err) {
+            this.error = err
+            setTimeout(() => {
+                this.error = null
+            }, 2500)
+        },
 
         PopEffect: function (e) {
             for (let i = 0; i < 5; i++) {
@@ -71,17 +79,17 @@ let Application = Vue.createApp({
 
         FormatNumber(num) {
             const units = [
-                { value: 1e36, suffix: ' INFINITY' },
-                { value: 1e33, suffix: ' QUINTILLIARD' },
-                { value: 1e30, suffix: ' QUINTILLION' },
-                { value: 1e27, suffix: ' QUADRILLIARD' },
-                { value: 1e24, suffix: ' QUADRILLION' },
-                { value: 1e21, suffix: ' TRILLIARD' },
-                { value: 1e18, suffix: ' TRILLION' },
-                { value: 1e15, suffix: ' BILLIARD' },
-                { value: 1e12, suffix: ' BILLION' },
-                { value: 1e9, suffix: ' MILLIARD' },
-                { value: 1e6, suffix: ' MILLION' },
+                {value: 1e36, suffix: ' INFINITY'},
+                {value: 1e33, suffix: ' QUINTILLIARD'},
+                {value: 1e30, suffix: ' QUINTILLION'},
+                {value: 1e27, suffix: ' QUADRILLIARD'},
+                {value: 1e24, suffix: ' QUADRILLION'},
+                {value: 1e21, suffix: ' TRILLIARD'},
+                {value: 1e18, suffix: ' TRILLION'},
+                {value: 1e15, suffix: ' BILLIARD'},
+                {value: 1e12, suffix: ' BILLION'},
+                {value: 1e9, suffix: ' MILLIARD'},
+                {value: 1e6, suffix: ' MILLION'},
             ];
 
             for (let unit of units) {
