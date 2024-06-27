@@ -6,6 +6,8 @@ type (
 		TelegramID uint64 `json:"telegram_id"`
 		LastSeen   uint64 `json:"last_seen"`
 		Coins      uint64 `json:"coins"`
+		Gold       uint64 `json:"gold"`
+		Investors  uint64 `json:"investors"`
 	}
 
 	UserProduct struct {
@@ -22,7 +24,6 @@ type (
 		StartProductPrice       uint64  `json:"start_product_price"`
 		ProductPriceMultiplier  float64 `json:"product_price_multiplier"`
 		StartCoinsPerClick      uint64  `json:"start_coins_per_click"`
-		CoinsPerClickPerLevel   uint64  `json:"coins_per_click_per_level"`
 		CoinsPerClickMultiplier float64 `json:"coins_per_click_multiplier"`
 		MaxLevel                uint64  `json:"max_level"`
 	}

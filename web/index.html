@@ -11,8 +11,9 @@
     <link rel="stylesheet" href="style.css">
     <script src="pkg/axios.min.js"></script>
     <script src="pkg/vue.global.prod.js"></script>
+    <script src="pkg/countup.min.js"></script>
 </head>
-<body class="p-3 text-nowrap" id="app">
+<body class="p-3 text-nowrap vh-100" id="app">
 
 <div v-if="game_data !== null">
     <div class="px-2 navbar fixed-top gap-3 bg-body-tertiary border-bottom border-dark shadow flex-nowrap">
@@ -100,8 +101,12 @@
     </div>
 </div>
 
-<div class="d-flex justify-content-center align-items-center min-vh-100 min-vw-100" v-else>
-    <h1>Loading</h1>
+<div class="d-flex justify-content-center align-items-center flex-column h-100" v-else>
+    <h1>Just a moment</h1>
+    <p class="m-0 text-body-tertiary">resources</p>
+    <p class="m-0 text-body-tertiary">game data</p>
+    <p class="m-0 text-body-tertiary">wait response</p>
+    <p class="m-0 text-body-tertiary">...</p>
 </div>
 
 <script src="index.js"></script>

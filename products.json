@@ -6,7 +6,6 @@
     "start_product_price": 10,
     "product_price_multiplier": 3,
     "start_coins_per_click": 1,
-    "coins_per_click_per_level": 1,
     "coins_per_click_multiplier": 2.5,
     "max_level": 1000
   },
@@ -17,7 +16,6 @@
     "start_product_price": 200,
     "product_price_multiplier": 3,
     "start_coins_per_click": 15,
-    "coins_per_click_per_level": 30,
     "coins_per_click_multiplier": 2.5,
     "max_level": 1000
   },
@@ -28,7 +26,6 @@
     "start_product_price": 720,
     "product_price_multiplier": 3,
     "start_coins_per_click": 72,
-    "coins_per_click_per_level": 360,
     "coins_per_click_multiplier": 2.5,
     "max_level": 1000
   },
@@ -39,7 +36,6 @@
     "start_product_price": 8640,
     "product_price_multiplier": 3,
     "start_coins_per_click": 390,
-    "coins_per_click_per_level": 4320,
     "coins_per_click_multiplier": 2.5,
     "max_level": 1000
   },
@@ -50,7 +46,6 @@
     "start_product_price": 104000,
     "product_price_multiplier": 3,
     "start_coins_per_click": 2890,
-    "coins_per_click_per_level": 52000,
     "coins_per_click_multiplier": 2.5,
     "max_level": 1000
   },
@@ -61,7 +56,6 @@
     "start_product_price": 1200000,
     "product_price_multiplier": 3,
     "start_coins_per_click": 6650,
-    "coins_per_click_per_level": 600000,
     "coins_per_click_multiplier": 2.5,
     "max_level": 1000
   },
@@ -72,7 +66,6 @@
     "start_product_price": 15000000,
     "product_price_multiplier": 3,
     "start_coins_per_click": 19230,
-    "coins_per_click_per_level": 7500000,
     "coins_per_click_multiplier": 2.5,
     "max_level": 1000
   },
@@ -83,7 +76,6 @@
     "start_product_price": 180000000,
     "product_price_multiplier": 3,
     "start_coins_per_click": 60000,
-    "coins_per_click_per_level": 90000000,
     "coins_per_click_multiplier": 2.5,
     "max_level": 1000
   },
@@ -94,7 +86,6 @@
     "start_product_price": 2150000000,
     "product_price_multiplier": 3,
     "start_coins_per_click": 150000,
-    "coins_per_click_per_level": 1075000000,
     "coins_per_click_multiplier": 2.5,
     "max_level": 1000
   },
@@ -105,7 +96,6 @@
     "start_product_price": 26000000000,
     "product_price_multiplier": 3,
     "start_coins_per_click": 360000,
-    "coins_per_click_per_level": 13000000000,
     "coins_per_click_multiplier": 2.5,
     "max_level": 1000
   }

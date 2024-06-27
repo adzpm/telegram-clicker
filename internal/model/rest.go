@@ -2,11 +2,13 @@ package model
 
 type (
 	Game struct {
-		UserID       uint64                  `json:"user_id"`
-		TelegramID   uint64                  `json:"telegram_id"`
-		LastSeen     uint64                  `json:"last_seen"`
-		CurrentCoins uint64                  `json:"current_coins"`
-		Products     map[uint64]*GameProduct `json:"products"`
+		UserID           uint64                  `json:"user_id"`
+		TelegramID       uint64                  `json:"telegram_id"`
+		LastSeen         uint64                  `json:"last_seen"`
+		CurrentCoins     uint64                  `json:"current_coins"`
+		CurrentGold      uint64                  `json:"current_gold"`
+		CurrentInvestors uint64                  `json:"current_investors"`
+		Products         map[uint64]*GameProduct `json:"products"`
 	}
 
 	GameProduct struct {

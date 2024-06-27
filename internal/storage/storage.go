@@ -77,7 +77,7 @@ func (s *Storage) FillProductsFromFileIfTableEmpty() error {
 		return nil
 	}
 
-	s.lgr.Info("filling products from file")
+	s.lgr.Debug("filling products from file")
 
 	file, err := os.Open("products.json")
 	if err != nil {
@@ -101,26 +101,28 @@ func (s *Storage) FillProductsFromFileIfTableEmpty() error {
 	return nil
 }
 
-func (s *Storage) InsertUser(telegramID uint64) (*model.User, error) {
-	s.lgr.Info("inserting user", zap.Uint64("telegram_id", telegramID))
+func (s *Storage) InsertUser(telegramID, coins, gold, investors uint64) (user *model.User, err error) {
+	s.lgr.Debug("inserting user", zap.Uint64("telegram_id", telegramID))
 
-	res := s.str.Table("users").Create(&model.User{TelegramID: telegramID})
-	if res.Error != nil {
+	if res := s.str.Table("users").Create(&model.User{
+		TelegramID: telegramID,
+		LastSeen:   uint64(time.Now().Unix()),
+		Coins:      coins,
+		Gold:       gold,
+		Investors:  investors,
+	}); res.Error != nil {
 		return nil, res.Error
 	}
 
-	user, err := s.SelectUser(telegramID)
-	if err != nil {
+	if user, err = s.SelectUser(telegramID); err != nil {
 		return nil, err
 	}
 
 	return user, nil
 }
 
-func (s *Storage) SelectUser(telegramID uint64) (*model.User, error) {
-	s.lgr.Info("selecting user", zap.Uint64("telegram_id", telegramID))
-
-	var user *model.User
+func (s *Storage) SelectUser(telegramID uint64) (user *model.User, err error) {
+	s.lgr.Debug("selecting user", zap.Uint64("telegram_id", telegramID))
 
 	res := s.str.Table("users").Where("telegram_id = ?", telegramID).First(&user)
 	if res.Error != nil {
@@ -130,145 +132,127 @@ func (s *Storage) SelectUser(telegramID uint64) (*model.User, error) {
 	return user, nil
 }
 
-func (s *Storage) SelectUsers() ([]model.User, error) {
-	s.lgr.Info("selecting all users")
+func (s *Storage) SelectUsers() (users []model.User, err error) {
+	s.lgr.Debug("selecting all users")
 
-	var users []model.User
-
-	res := s.str.Table("users").Find(&users)
-	if res.Error != nil {
+	if res := s.str.Table("users").Find(&users); res.Error != nil {
 		return nil, res.Error
 	}
 
 	return users, nil
 }
 
-func (s *Storage) UpdateUserCoins(telegramID, coins uint64) (*model.User, error) {
-	s.lgr.Info("updating user coins",
+func (s *Storage) UpdateUserCoins(telegramID, coins uint64) (user *model.User, err error) {
+	s.lgr.Debug("updating user coins",
 		zap.Uint64("telegram_id", telegramID),
 		zap.Uint64("coins", coins),
 	)
 
-	res := s.str.Table("users").Where("telegram_id = ?", telegramID).Update("coins", coins)
-	if res.Error != nil {
+	if res := s.str.Table("users").Where("telegram_id = ?", telegramID).Update("coins", coins); res.Error != nil {
 		return nil, res.Error
 	}
 
-	user, err := s.SelectUser(telegramID)
-	if err != nil {
+	if user, err = s.SelectUser(telegramID); err != nil {
 		return nil, err
 	}
 
 	return user, nil
 }
 
-func (s *Storage) UpdateUserLastSeen(telegramID, lastSeen uint64) (*model.User, error) {
-	s.lgr.Info("updating user last seen", zap.Uint64("telegram_id", telegramID), zap.Uint64("last_seen", lastSeen))
+func (s *Storage) UpdateUserLastSeen(telegramID, lastSeen uint64) (user *model.User, err error) {
+	s.lgr.Debug("updating user last seen",
+		zap.Uint64("telegram_id", telegramID),
+		zap.Uint64("last_seen", lastSeen),
+	)
 
-	res := s.str.Table("users").Where("telegram_id = ?", telegramID).Update("last_seen", lastSeen)
-	if res.Error != nil {
+	if res := s.str.Table("users").Where("telegram_id = ?", telegramID).Update("last_seen", lastSeen); res.Error != nil {
 		return nil, res.Error
 	}
 
-	user, err := s.SelectUser(telegramID)
-	if err != nil {
+	if user, err = s.SelectUser(telegramID); err != nil {
 		return nil, err
 	}
 
 	return user, nil
 }
 
-func (s *Storage) InsertUserProduct(telegramID, productID, level uint64) (*model.UserProduct, error) {
-	s.lgr.Info("inserting user product",
+func (s *Storage) InsertUserProduct(telegramID, productID, level uint64) (userProduct *model.UserProduct, err error) {
+	s.lgr.Debug("inserting user product",
 		zap.Uint64("telegram_id", telegramID),
 		zap.Uint64("product_id", productID),
 		zap.Uint64("level", level),
 	)
 
-	var userProduct *model.UserProduct
-
-	res := s.str.Table("user_products").Create(&model.UserProduct{TelegramID: telegramID, ProductID: productID, Level: level})
-	if res.Error != nil {
+	if res := s.str.Table("user_products").Create(&model.UserProduct{
+		TelegramID: telegramID,
+		ProductID:  productID,
+		Level:      level,
+	}); res.Error != nil {
 		return nil, res.Error
 	}
 
-	userProduct, err := s.SelectUserProduct(telegramID, productID)
-	if err != nil {
+	if userProduct, err = s.SelectUserProduct(telegramID, productID); err != nil {
 		return nil, err
 	}
 
 	return userProduct, nil
 }
 
-func (s *Storage) SelectUserProduct(telegramID, productID uint64) (*model.UserProduct, error) {
-	s.lgr.Info("selecting user product",
+func (s *Storage) SelectUserProduct(telegramID, productID uint64) (userProduct *model.UserProduct, err error) {
+	s.lgr.Debug("selecting user product",
 		zap.Uint64("telegram_id", telegramID),
 		zap.Uint64("product_id", productID),
 	)
 
-	var userProduct *model.UserProduct
-
-	res := s.str.Table("user_products").Where("telegram_id = ? AND product_id = ?", telegramID, productID).First(&userProduct)
-	if res.Error != nil {
+	if res := s.str.Table("user_products").Where("telegram_id = ? AND product_id = ?", telegramID, productID).First(&userProduct); res.Error != nil {
 		return nil, res.Error
 	}
 
 	return userProduct, nil
 }
 
-func (s *Storage) SelectUserProducts(telegramID uint64) ([]model.UserProduct, error) {
-	s.lgr.Info("selecting user products", zap.Uint64("telegram_id", telegramID))
+func (s *Storage) SelectUserProducts(telegramID uint64) (userProducts []model.UserProduct, err error) {
+	s.lgr.Debug("selecting user products", zap.Uint64("telegram_id", telegramID))
 
-	var userProducts []model.UserProduct
-
-	res := s.str.Table("user_products").Where("telegram_id = ?", telegramID).Find(&userProducts)
-	if res.Error != nil {
+	if res := s.str.Table("user_products").Where("telegram_id = ?", telegramID).Find(&userProducts); res.Error != nil {
 		return nil, res.Error
 	}
 
 	return userProducts, nil
 }
 
-func (s *Storage) UpdateUserProductLevel(telegramID, productID, level uint64) (*model.UserProduct, error) {
-	s.lgr.Info("updating user product level",
+func (s *Storage) UpdateUserProductLevel(telegramID, productID, level uint64) (userProduct *model.UserProduct, err error) {
+	s.lgr.Debug("updating user product level",
 		zap.Uint64("telegram_id", telegramID),
 		zap.Uint64("product_id", productID),
 		zap.Uint64("level", level),
 	)
 
-	res := s.str.Table("user_products").Where("telegram_id = ? AND product_id = ?", telegramID, productID).Update("level", level)
-	if res.Error != nil {
+	if res := s.str.Table("user_products").Where("telegram_id = ? AND product_id = ?", telegramID, productID).Update("level", level); res.Error != nil {
 		return nil, res.Error
 	}
 
-	userProduct, err := s.SelectUserProduct(telegramID, productID)
-	if err != nil {
+	if userProduct, err = s.SelectUserProduct(telegramID, productID); err != nil {
 		return nil, err
 	}
 
 	return userProduct, nil
 }
 
-func (s *Storage) SelectProduct(productID uint64) (*model.Product, error) {
-	s.lgr.Info("selecting product", zap.Uint64("product_id", productID))
+func (s *Storage) SelectProduct(productID uint64) (products *model.Product, err error) {
+	s.lgr.Debug("selecting product", zap.Uint64("product_id", productID))
 
-	var products *model.Product
-
-	res := s.str.Table("products").Where("id = ?", productID).First(&products)
-	if res.Error != nil {
+	if res := s.str.Table("products").Where("id = ?", productID).First(&products); res.Error != nil {
 		return nil, res.Error
 	}
 
 	return products, nil
 }
 
-func (s *Storage) SelectProducts() ([]model.Product, error) {
-	s.lgr.Info("selecting all products")
+func (s *Storage) SelectProducts() (products []model.Product, err error) {
+	s.lgr.Debug("selecting all products")
 
-	var products []model.Product
-
-	res := s.str.Table("products").Find(&products)
-	if res.Error != nil {
+	if res := s.str.Table("products").Find(&products); res.Error != nil {
 		return nil, res.Error
 	}
 

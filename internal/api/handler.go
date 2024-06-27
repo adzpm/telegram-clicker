@@ -3,6 +3,7 @@ package api
 import (
 	"errors"
 	"gorm.io/gorm"
+	"net/http"
 	"time"
 
 	fiber "github.com/gofiber/fiber/v2"
@@ -72,20 +73,26 @@ func mergeProducts(
 	return products
 }
 
-func Throw500Error(c *fiber.Ctx, dst interface{}) (err error) {
-	if err = c.Status(500).JSON(fiber.Map{"error": dst}); err != nil {
-		return err
+func CreateGameResponse(user *model.User, allProducts []model.Product, userProducts []model.UserProduct) *model.Game {
+	return &model.Game{
+		UserID:       user.ID,
+		TelegramID:   user.TelegramID,
+		LastSeen:     user.LastSeen,
+		CurrentCoins: user.Coins,
+		Products:     mergeProducts(allProducts, userProducts),
 	}
+}
 
-	return nil
+func Throw500Error(c *fiber.Ctx, dst interface{}) (err error) {
+	return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": dst})
 }
 
 func Throw400Error(c *fiber.Ctx, dst interface{}) (err error) {
-	if err = c.Status(400).JSON(fiber.Map{"error": dst}); err != nil {
-		return err
-	}
+	return c.Status(http.StatusBadRequest).JSON(fiber.Map{"error": dst})
+}
 
-	return nil
+func Throw200Response(c *fiber.Ctx, dst interface{}) (err error) {
+	return c.Status(http.StatusOK).JSON(dst)
 }
 
 func (a *API) Enter(c *fiber.Ctx) (err error) {
@@ -104,15 +111,15 @@ func (a *API) Enter(c *fiber.Ctx) (err error) {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			a.lgr.Warn("error while selecting user. Try to create new account", zap.Error(err))
 
-			if user, err = a.str.InsertUser(uint64(tgID)); err != nil {
-				return Throw500Error(c, err.Error())
+			if user, err = a.str.InsertUser(uint64(tgID), 0, 1000, 0); err != nil {
+				return Throw500Error(c, err)
 			}
 
 			if _, err = a.str.InsertUserProduct(user.TelegramID, 1, 1); err != nil {
-				return Throw500Error(c, err.Error())
+				return Throw500Error(c, err)
 			}
 		} else {
-			return Throw500Error(c, err.Error())
+			return Throw500Error(c, err)
 		}
 	}
 
@@ -123,30 +130,20 @@ func (a *API) Enter(c *fiber.Ctx) (err error) {
 	)
 
 	if allProducts, err = a.str.SelectProducts(); err != nil {
-		return Throw500Error(c, err.Error())
+		return Throw500Error(c, err)
 	}
 
 	if userProducts, err = a.str.SelectUserProducts(user.TelegramID); err != nil {
-		return Throw500Error(c, err.Error())
+		return Throw500Error(c, err)
 	}
 
 	// add coins for offline time
 
 	if user, err = a.str.UpdateUserLastSeen(user.TelegramID, timeNow); err != nil {
-		return Throw500Error(c, err.Error())
+		return Throw500Error(c, err)
 	}
 
-	products := mergeProducts(allProducts, userProducts)
-
-	response := &model.Game{
-		UserID:       user.ID,
-		TelegramID:   user.TelegramID,
-		LastSeen:     user.LastSeen,
-		CurrentCoins: user.Coins,
-		Products:     products,
-	}
-
-	return c.Status(200).JSON(response)
+	return Throw200Response(c, CreateGameResponse(user, allProducts, userProducts))
 }
 
 func (a *API) ClickProduct(c *fiber.Ctx) (err error) {
@@ -173,15 +170,15 @@ func (a *API) ClickProduct(c *fiber.Ctx) (err error) {
 	)
 
 	if user, err = a.str.SelectUser(uint64(tgID)); err != nil {
-		return Throw500Error(c, err.Error())
+		return Throw500Error(c, err)
 	}
 
 	if product, err = a.str.SelectProduct(uint64(prID)); err != nil {
-		return Throw500Error(c, err.Error())
+		return Throw500Error(c, err)
 	}
 
 	if userProduct, err = a.str.SelectUserProduct(user.TelegramID, product.ID); err != nil {
-		return Throw500Error(c, err.Error())
+		return Throw500Error(c, err)
 	}
 
 	if userProduct.Level > 0 {
@@ -193,7 +190,7 @@ func (a *API) ClickProduct(c *fiber.Ctx) (err error) {
 	}
 
 	if user, err = a.str.UpdateUserCoins(user.TelegramID, user.Coins+coinsClicked); err != nil {
-		return Throw500Error(c, err.Error())
+		return Throw500Error(c, err)
 	}
 
 	var (
@@ -202,22 +199,14 @@ func (a *API) ClickProduct(c *fiber.Ctx) (err error) {
 	)
 
 	if allProducts, err = a.str.SelectProducts(); err != nil {
-		return Throw500Error(c, err.Error())
+		return Throw500Error(c, err)
 	}
 
 	if userProducts, err = a.str.SelectUserProducts(user.TelegramID); err != nil {
-		return Throw500Error(c, err.Error())
+		return Throw500Error(c, err)
 	}
 
-	response := &model.Game{
-		UserID:       user.ID,
-		TelegramID:   user.TelegramID,
-		LastSeen:     user.LastSeen,
-		CurrentCoins: user.Coins,
-		Products:     mergeProducts(allProducts, userProducts),
-	}
-
-	return c.Status(200).JSON(response)
+	return Throw200Response(c, CreateGameResponse(user, allProducts, userProducts))
 }
 
 func (a *API) BuyProduct(c *fiber.Ctx) (err error) {
@@ -245,19 +234,19 @@ func (a *API) BuyProduct(c *fiber.Ctx) (err error) {
 	)
 
 	if user, err = a.str.SelectUser(uint64(tgID)); err != nil {
-		return Throw500Error(c, err.Error())
+		return Throw500Error(c, err)
 	}
 
 	if product, err = a.str.SelectProduct(uint64(prID)); err != nil {
-		return Throw500Error(c, err.Error())
+		return Throw500Error(c, err)
 	}
 
 	if allProducts, err = a.str.SelectProducts(); err != nil {
-		return Throw500Error(c, err.Error())
+		return Throw500Error(c, err)
 	}
 
 	if userProducts, err = a.str.SelectUserProducts(user.TelegramID); err != nil {
-		return Throw500Error(c, err.Error())
+		return Throw500Error(c, err)
 
 	}
 
@@ -270,28 +259,20 @@ func (a *API) BuyProduct(c *fiber.Ctx) (err error) {
 			}
 
 			if userProduct, err = a.str.InsertUserProduct(user.TelegramID, product.ID, 1); err != nil {
-				return Throw500Error(c, err.Error())
+				return Throw500Error(c, err)
 			}
 
 			if user, err = a.str.UpdateUserCoins(user.TelegramID, user.Coins-priceToBuy); err != nil {
-				return Throw500Error(c, err.Error())
+				return Throw500Error(c, err)
 			}
 
 			if userProducts, err = a.str.SelectUserProducts(user.TelegramID); err != nil {
-				return Throw500Error(c, err.Error())
+				return Throw500Error(c, err)
 			}
 
-			response := &model.Game{
-				UserID:       user.ID,
-				TelegramID:   user.TelegramID,
-				LastSeen:     user.LastSeen,
-				CurrentCoins: user.Coins,
-				Products:     mergeProducts(allProducts, userProducts),
-			}
-
-			return c.Status(200).JSON(response)
+			return Throw200Response(c, CreateGameResponse(user, allProducts, userProducts))
 		} else {
-			return Throw500Error(c, err.Error())
+			return Throw500Error(c, err)
 		}
 	}
 
@@ -306,24 +287,16 @@ func (a *API) BuyProduct(c *fiber.Ctx) (err error) {
 	}
 
 	if user, err = a.str.UpdateUserCoins(user.TelegramID, user.Coins-priceToBuy); err != nil {
-		return Throw500Error(c, err.Error())
+		return Throw500Error(c, err)
 	}
 
 	if userProduct, err = a.str.UpdateUserProductLevel(user.TelegramID, product.ID, userProduct.Level+1); err != nil {
-		return Throw500Error(c, err.Error())
+		return Throw500Error(c, err)
 	}
 
 	if userProducts, err = a.str.SelectUserProducts(user.TelegramID); err != nil {
-		return Throw500Error(c, err.Error())
+		return Throw500Error(c, err)
 	}
 
-	response := &model.Game{
-		UserID:       user.ID,
-		TelegramID:   user.TelegramID,
-		LastSeen:     user.LastSeen,
-		CurrentCoins: user.Coins,
-		Products:     mergeProducts(allProducts, userProducts),
-	}
-
-	return c.Status(200).JSON(response)
+	return Throw200Response(c, CreateGameResponse(user, allProducts, userProducts))
 }

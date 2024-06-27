@@ -13,12 +13,12 @@ func main() {
 	ctx, can := context.WithCancel(context.Background())
 	defer can()
 
-	lgr, err := zap.NewDevelopment()
+	lgr, err := zap.NewProduction()
 	if err != nil {
 		panic(err)
 	}
 
-	defer lgr.Sync()
+	defer func() { _ = lgr.Sync() }()
 
 	str, err := storage.NewStorage(lgr, &storage.Config{
 		Path: "tgc.db",
