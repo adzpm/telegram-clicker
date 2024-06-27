@@ -31,6 +31,35 @@ func TestCalculateCoinsPerClick(t *testing.T) {
 	}
 }
 
+func TestCalculateCoinsPerClickVariant2(t *testing.T) {
+	testCases := map[string]struct {
+		startCoins    uint64
+		level         uint64
+		coinsPerLevel uint64
+
+		expected uint64
+	}{
+		"level 0 / start 1": {2, 0, 2, 0},
+		"level 1 / start 1": {2, 1, 2, 2},
+		"level 2 / start 1": {2, 2, 2, 4},
+		"level 3 / start 1": {2, 3, 2, 6},
+		"level 4 / start 1": {2, 4, 2, 8},
+		"level 5 / start 1": {2, 5, 2, 10},
+		"level 6 / start 1": {2, 6, 2, 12},
+		"level 7 / start 1": {2, 7, 2, 14},
+		"level 8 / start 1": {2, 8, 2, 16},
+	}
+
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+			result := CalculateCoinsPerClickVariant2(tc.startCoins, tc.level, tc.coinsPerLevel)
+			if result != tc.expected {
+				t.Errorf("expected %d, got %d", tc.expected, result)
+			}
+		})
+	}
+}
+
 func TestCalculateUpgradePrice(t *testing.T) {
 	testCases := map[string]struct {
 		startPrice      uint64

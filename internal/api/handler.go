@@ -55,11 +55,11 @@ func mergeProducts(
 			startPrice         = allProductsMap[productID].StartProductPrice
 			startCoinsPerClick = allProductsMap[productID].StartCoinsPerClick
 			priceMp            = allProductsMap[productID].ProductPriceMultiplier
-			coinsMp            = allProductsMap[productID].CoinsPerClickMultiplier
+			coinsPerLevel      = allProductsMap[productID].CoinsPerClickPerLevel
 			nextPrice          = math.CalculateUpgradePrice(startPrice, level, priceMp)
 			curPrice           = math.CalculateUpgradePrice(startPrice, level-1, priceMp)
-			nextCoins          = math.CalculateCoinsPerClick(startCoinsPerClick, level+1, coinsMp)
-			curCoins           = math.CalculateCoinsPerClick(startCoinsPerClick, level, coinsMp)
+			nextCoins          = math.CalculateCoinsPerClickVariant2(startCoinsPerClick, level+1, coinsPerLevel)
+			curCoins           = math.CalculateCoinsPerClickVariant2(startCoinsPerClick, level, coinsPerLevel)
 		)
 
 		products[productID].CurrentLevel = level
@@ -185,10 +185,10 @@ func (a *API) ClickProduct(c *fiber.Ctx) (err error) {
 	}
 
 	if userProduct.Level > 0 {
-		coinsClicked = math.CalculateCoinsPerClick(
+		coinsClicked = math.CalculateCoinsPerClickVariant2(
 			product.StartCoinsPerClick,
 			userProduct.Level,
-			product.CoinsPerClickMultiplier,
+			product.CoinsPerClickPerLevel,
 		)
 	}
 

@@ -22,6 +22,7 @@ type (
 		StartProductPrice       uint64  `json:"start_product_price"`
 		ProductPriceMultiplier  float64 `json:"product_price_multiplier"`
 		StartCoinsPerClick      uint64  `json:"start_coins_per_click"`
+		CoinsPerClickPerLevel   uint64  `json:"coins_per_click_per_level"`
 		CoinsPerClickMultiplier float64 `json:"coins_per_click_multiplier"`
 		MaxLevel                uint64  `json:"max_level"`
 	}
