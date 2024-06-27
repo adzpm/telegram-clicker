@@ -55,11 +55,11 @@ func mergeProducts(
 			startPrice         = allProductsMap[productID].StartProductPrice
 			startCoinsPerClick = allProductsMap[productID].StartCoinsPerClick
 			priceMp            = allProductsMap[productID].ProductPriceMultiplier
-			coinsPerLevel      = allProductsMap[productID].CoinsPerClickPerLevel
+			coinsMP            = allProductsMap[productID].CoinsPerClickMultiplier
 			nextPrice          = math.CalculateUpgradePrice(startPrice, level, priceMp)
 			curPrice           = math.CalculateUpgradePrice(startPrice, level-1, priceMp)
-			nextCoins          = math.CalculateCoinsPerClickVariant2(startCoinsPerClick, level+1, coinsPerLevel)
-			curCoins           = math.CalculateCoinsPerClickVariant2(startCoinsPerClick, level, coinsPerLevel)
+			nextCoins          = math.CalculateCoinsPerClick(startCoinsPerClick, level+1, coinsMP)
+			curCoins           = math.CalculateCoinsPerClick(startCoinsPerClick, level, coinsMP)
 		)
 
 		products[productID].CurrentLevel = level

@@ -1,47 +1,9 @@
 let Application = Vue.createApp({
     data: function () {
         return {
-            telegram_data: {},
-
-            game_data: {
-                "user_id": 4,
-                "telegram_id": 9876543210,
-                "last_seen": 1719341593,
-                "current_coins": 240,
-                "current_gold": 0,
-                "products": {
-                    "1": {
-                        "id": 1,
-                        "name": "BTC Exchange",
-                        "image_url": "https://www.svgrepo.com/show/289569/exchange-euro.svg",
-                        "upgrade_price": 4633,
-                        "coins_per_click": 13,
-                        "coins_per_minute": 13,
-                        "current_level": 1,
-                        "max_level": 100
-                    },
-                    "2": {
-                        "id": 2,
-                        "name": "Currency mapping",
-                        "image_url": "https://www.svgrepo.com/show/430187/solution-bulb-concept.svg",
-                        "upgrade_price": 2155,
-                        "coins_per_click": 0,
-                        "coins_per_minute": 0,
-                        "current_level": 0,
-                        "max_level": 100
-                    },
-                    "3": {
-                        "id": 3,
-                        "name": "Crypto Stock",
-                        "image_url": "https://www.svgrepo.com/show/493504/stockfx-chart.svg",
-                        "upgrade_price": 17630,
-                        "coins_per_click": 0,
-                        "coins_per_minute": 0,
-                        "current_level": 0,
-                        "max_level": 100
-                    }
-                }
-            },
+            started_from_telegram: false,
+            telegram_data: null,
+            game_data: null,
         }
     },
 
@@ -106,6 +68,30 @@ let Application = Vue.createApp({
                 particle.remove()
             }
         },
+
+        FormatNumber(num) {
+            const units = [
+                { value: 1e36, suffix: ' INFINITY' },
+                { value: 1e33, suffix: ' QUINTILLIARD' },
+                { value: 1e30, suffix: ' QUINTILLION' },
+                { value: 1e27, suffix: ' QUADRILLIARD' },
+                { value: 1e24, suffix: ' QUADRILLION' },
+                { value: 1e21, suffix: ' TRILLIARD' },
+                { value: 1e18, suffix: ' TRILLION' },
+                { value: 1e15, suffix: ' BILLIARD' },
+                { value: 1e12, suffix: ' BILLION' },
+                { value: 1e9, suffix: ' MILLIARD' },
+                { value: 1e6, suffix: ' MILLION' },
+            ];
+
+            for (let unit of units) {
+                if (num >= unit.value) {
+                    return (num / unit.value).toFixed(3).replace(/\.?0+$/, '') + unit.suffix;
+                }
+            }
+
+            return num.toString();
+        }
     },
 
     computed: {
