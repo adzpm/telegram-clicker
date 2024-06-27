@@ -4,10 +4,10 @@
     "name": "Concept development",
     "image_url": "asset/img/step_1.svg",
     "start_product_price": 10,
-    "product_price_multiplier": 2.5,
+    "product_price_multiplier": 3,
     "start_coins_per_click": 1,
     "coins_per_click_per_level": 1,
-    "coins_per_click_multiplier": 2.3,
+    "coins_per_click_multiplier": 2.5,
     "max_level": 1000
   },
   {
@@ -15,10 +15,10 @@
     "name": "Whitepaper creation",
     "image_url": "asset/img/step_2.svg",
     "start_product_price": 200,
-    "product_price_multiplier": 2.7,
-    "start_coins_per_click": 3,
+    "product_price_multiplier": 3,
+    "start_coins_per_click": 15,
     "coins_per_click_per_level": 30,
-    "coins_per_click_multiplier": 2.6,
+    "coins_per_click_multiplier": 2.5,
     "max_level": 1000
   },
   {
@@ -26,10 +26,10 @@
     "name": "Attracting investment via ICO",
     "image_url": "asset/img/step_3.svg",
     "start_product_price": 720,
-    "product_price_multiplier": 1.25,
-    "start_coins_per_click": 360,
+    "product_price_multiplier": 3,
+    "start_coins_per_click": 72,
     "coins_per_click_per_level": 360,
-    "coins_per_click_multiplier": 2.0,
+    "coins_per_click_multiplier": 2.5,
     "max_level": 1000
   },
   {
@@ -37,10 +37,10 @@
     "name": "MVP development",
     "image_url": "asset/img/step_4.svg",
     "start_product_price": 8640,
-    "product_price_multiplier": 1.25,
-    "start_coins_per_click": 4320,
+    "product_price_multiplier": 3,
+    "start_coins_per_click": 390,
     "coins_per_click_per_level": 4320,
-    "coins_per_click_multiplier": 2.0,
+    "coins_per_click_multiplier": 2.5,
     "max_level": 1000
   },
   {
@@ -48,10 +48,10 @@
     "name": "Testing",
     "image_url": "asset/img/step_5.svg",
     "start_product_price": 104000,
-    "product_price_multiplier": 1.25,
-    "start_coins_per_click": 52000,
+    "product_price_multiplier": 3,
+    "start_coins_per_click": 2890,
     "coins_per_click_per_level": 52000,
-    "coins_per_click_multiplier": 2.0,
+    "coins_per_click_multiplier": 2.5,
     "max_level": 1000
   },
   {
@@ -59,10 +59,10 @@
     "name": "Launch of blockchain network and token",
     "image_url": "asset/img/step_6.svg",
     "start_product_price": 1200000,
-    "product_price_multiplier": 1.25,
-    "start_coins_per_click": 600000,
+    "product_price_multiplier": 3,
+    "start_coins_per_click": 6650,
     "coins_per_click_per_level": 600000,
-    "coins_per_click_multiplier": 2.0,
+    "coins_per_click_multiplier": 2.5,
     "max_level": 1000
   },
   {
@@ -70,10 +70,11 @@
     "name": "Promotion and Marketing",
     "image_url": "asset/img/step_7.svg",
     "start_product_price": 15000000,
-    "product_price_multiplier": 1.25,
-    "start_coins_per_click": 7500000,
+    "product_price_multiplier": 3,
+    "start_coins_per_click": 19
+    230,
     "coins_per_click_per_level": 7500000,
-    "coins_per_click_multiplier": 2.0,
+    "coins_per_click_multiplier": 2.5,
     "max_level": 1000
   },
   {
@@ -81,10 +82,10 @@
     "name": "Partnership with other companies",
     "image_url": "asset/img/step_8.svg",
     "start_product_price": 180000000,
-    "product_price_multiplier": 1.25,
-    "start_coins_per_click": 90000000,
+    "product_price_multiplier": 3,
+    "start_coins_per_click": 60000,
     "coins_per_click_per_level": 90000000,
-    "coins_per_click_multiplier": 2.0,
+    "coins_per_click_multiplier": 2.5,
     "max_level": 1000
   },
   {
@@ -92,10 +93,10 @@
     "name": "Token listing on major exchanges",
     "image_url": "asset/img/step_9.svg",
     "start_product_price": 2150000000,
-    "product_price_multiplier": 1.25,
-    "start_coins_per_click": 1075000000,
+    "product_price_multiplier": 3,
+    "start_coins_per_click": 150000,
     "coins_per_click_per_level": 1075000000,
-    "coins_per_click_multiplier": 2.0,
+    "coins_per_click_multiplier": 2.5,
     "max_level": 1000
   },
   {
@@ -103,10 +104,10 @@
     "name": "Support and development",
     "image_url": "asset/img/step_10.svg",
     "start_product_price": 26000000000,
-    "product_price_multiplier": 1.25,
-    "start_coins_per_click": 13000000000,
+    "product_price_multiplier": 3,
+    "start_coins_per_click": 360000,
     "coins_per_click_per_level": 13000000000,
-    "coins_per_click_multiplier": 2.0,
+    "coins_per_click_multiplier": 2.5,
     "max_level": 1000
   }
 ]
