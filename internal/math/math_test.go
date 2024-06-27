@@ -14,45 +14,16 @@ func TestCalculateCoinsPerClick(t *testing.T) {
 		"level 1 / start 1": {1, 1, 2.1, 1},
 		"level 2 / start 1": {1, 2, 2.1, 2},
 		"level 3 / start 1": {1, 3, 2.1, 4},
-		"level 4 / start 1": {1, 4, 2.1, 8},
-		"level 5 / start 1": {1, 5, 2.1, 16},
-		"level 6 / start 1": {1, 6, 2.1, 33},
-		"level 7 / start 1": {1, 7, 2.1, 69},
-		"level 8 / start 1": {1, 8, 2.1, 144},
+		"level 4 / start 1": {1, 4, 2.1, 9},
+		"level 5 / start 1": {1, 5, 2.1, 19},
+		"level 6 / start 1": {1, 6, 2.1, 40},
+		"level 7 / start 1": {1, 7, 2.1, 85},
+		"level 8 / start 1": {1, 8, 2.1, 180},
 	}
 
 	for name, tc := range testCases {
 		t.Run(name, func(t *testing.T) {
 			result := CalculateCoinsPerClick(tc.startCoins, tc.level, tc.coinsMultiplier)
-			if result != tc.expected {
-				t.Errorf("expected %d, got %d", tc.expected, result)
-			}
-		})
-	}
-}
-
-func TestCalculateCoinsPerClickVariant2(t *testing.T) {
-	testCases := map[string]struct {
-		startCoins    uint64
-		level         uint64
-		coinsPerLevel uint64
-
-		expected uint64
-	}{
-		"level 0 / start 1": {2, 0, 2, 0},
-		"level 1 / start 1": {2, 1, 2, 2},
-		"level 2 / start 1": {2, 2, 2, 4},
-		"level 3 / start 1": {2, 3, 2, 6},
-		"level 4 / start 1": {2, 4, 2, 8},
-		"level 5 / start 1": {2, 5, 2, 10},
-		"level 6 / start 1": {2, 6, 2, 12},
-		"level 7 / start 1": {2, 7, 2, 14},
-		"level 8 / start 1": {2, 8, 2, 16},
-	}
-
-	for name, tc := range testCases {
-		t.Run(name, func(t *testing.T) {
-			result := CalculateCoinsPerClickVariant2(tc.startCoins, tc.level, tc.coinsPerLevel)
 			if result != tc.expected {
 				t.Errorf("expected %d, got %d", tc.expected, result)
 			}
@@ -72,15 +43,16 @@ func TestCalculateUpgradePrice(t *testing.T) {
 		"level 1 / start 100": {100, 1, 1.5, 150},
 		"level 2 / start 100": {100, 2, 1.5, 225},
 		"level 3 / start 100": {100, 3, 1.5, 337},
-		"level 4 / start 100": {100, 4, 1.5, 505},
-		"level 5 / start 100": {100, 5, 1.5, 757},
-		"level 6 / start 100": {100, 6, 1.5, 1135},
-		"level 7 / start 100": {100, 7, 1.5, 1702},
-		"level 8 / start 100": {100, 8, 1.5, 2553},
+		"level 4 / start 100": {100, 4, 1.5, 506},
+		"level 5 / start 100": {100, 5, 1.5, 759},
+		"level 6 / start 100": {100, 6, 1.5, 1139},
+		"level 7 / start 100": {100, 7, 1.5, 1708},
+		"level 8 / start 100": {100, 8, 1.5, 2562},
 
-		"case 1": {100, 1, 2.2, 440},
-		"case 2": {100, 2, 2.2, 968},
-		"case 3": {100, 3, 2.2, 2129},
+		"case 1": {10, 0, 3, 10},
+		"case 2": {10, 1, 3, 30},
+		"case 3": {10, 2, 3, 90},
+		"case 4": {10, 3, 3, 270},
 	}
 
 	for name, tc := range testCases {

@@ -7,9 +7,9 @@
     "product_price_multiplier": 3,
     "start_coins_per_click": 1,
     "coins_per_click_per_level": 1,
-  "coins_per_click_multiplier": 2.5,
-  "max_level": 1000
-},
+    "coins_per_click_multiplier": 2.5,
+    "max_level": 1000
+  },
   {
     "id": 2,
     "name": "Whitepaper creation",
