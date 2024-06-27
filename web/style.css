@@ -4,12 +4,20 @@
 }
 
 :root {
-    --app-bg-color: #f6f3ee;
+    --app-bg-color: #F6F3EE;
+    --app-gold: #DAA520;
+    --app-gold-rgb: 218, 165, 32;
 }
 
 body {
-    background: var(--app-bg-color)  url('asset/img/bg.png') no-repeat center center fixed;
+    background: var(--app-bg-color) url('asset/img/bg.png') no-repeat center center fixed;
     background-size: cover;
+}
+
+
+.text-gold {
+    --bs-text-opacity: 1;
+    color: rgba(var(--app-gold-rgb), var(--bs-text-opacity)) !important;
 }
 
 particle {

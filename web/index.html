@@ -16,7 +16,7 @@
 <body class="p-3 vh-100" id="app">
 
 <div v-if="game_data !== null">
-    <div class="px-3 navbar fixed-top gap-3 bg-body-tertiary border-bottom border-dark shadow">
+    <div class="p-3 navbar fixed-top gap-3 bg-body-tertiary border-bottom border-dark shadow">
         <div>
             <img class="rounded-circle border border-1 border-black"
                  alt="avatar" src="asset/img/avatar.png" height="80px">
@@ -33,12 +33,12 @@
             </div>
             <div class="d-flex align-items-center fw-bold small">
                 <img src="asset/img/gold.svg" alt="gold" height="18px" class="me-2">
-                <span class="text-success">{{ FormatNumber(game_data.current_gold) }}</span>
+                <span class="text-gold">{{ FormatNumber(game_data.current_gold) }}</span>
             </div>
         </div>
     </div>
 
-    <div class="container d-flex flex-column gap-3" style="padding: 6.5em 0 5em 0">
+    <div class="container d-flex flex-column gap-3" style="padding: 7.5em 0 5em 0">
         <div v-for="product in game_data.products">
             <div class="d-flex w-100 gap-3" v-if="product.current_level > 0">
                 <div class="d-flex flex-column gap-2 align-items-center"
@@ -77,7 +77,7 @@
             </div>
             <div class="" v-else>
                 <span class="fw-bolder text-uppercase d-block mb-2 text-truncate">{{ product.name }}</span>
-                <a v-bind:class="'btn btn-success fw-bold w-100' + (product.upgrade_price > game_data.current_coins ? ' disabled' : '')"
+                <a v-bind:class="'btn btn-lg btn-success fw-bold w-100' + (product.upgrade_price > game_data.current_coins ? ' disabled' : '')"
                    @click="BuyProduct(TelegramID, product.id)">
                     <span class="text-uppercase me-1">UNLOCK</span>
                     <img src="asset/img/coin.svg" alt="coin" height="18px" class="me-1">
