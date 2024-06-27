@@ -13,17 +13,17 @@
     <script src="pkg/vue.global.prod.js"></script>
     <script src="pkg/countup.min.js"></script>
 </head>
-<body class="p-3 text-nowrap vh-100" id="app">
+<body class="p-3 vh-100" id="app">
 
 <div v-if="game_data !== null">
-    <div class="px-2 navbar fixed-top gap-3 bg-body-tertiary border-bottom border-dark shadow flex-nowrap">
+    <div class="px-3 navbar fixed-top gap-3 bg-body-tertiary border-bottom border-dark shadow">
         <div>
-            <img src="asset/img/avatar.png" class="rounded-circle border border-1 border-black" alt="avatar"
-                 height="80px">
+            <img class="rounded-circle border border-1 border-black"
+                 alt="avatar" src="asset/img/avatar.png" height="80px">
         </div>
         <div class="d-flex flex-column gap-1 flex-grow-1">
             <div class="d-flex align-items-center fw-bold fs-6">
-                <img src="asset/img/user.svg" alt="coin" height="18px" class="me-2">
+                <img src="asset/img/user.svg" alt="user" height="18px" class="me-2">
                 <span class="text-dark me-2">{{ TelegramName }}</span>
                 <span class="text-secondary">{{ TelegramID }}</span>
             </div>
@@ -31,10 +31,14 @@
                 <img src="asset/img/coin.svg" alt="coin" height="18px" class="me-2">
                 <span class="text-success">{{ FormatNumber(game_data.current_coins) }}</span>
             </div>
+            <div class="d-flex align-items-center fw-bold small">
+                <img src="asset/img/gold.svg" alt="gold" height="18px" class="me-2">
+                <span class="text-success">{{ FormatNumber(game_data.current_gold) }}</span>
+            </div>
         </div>
     </div>
 
-    <div class="container d-flex flex-column gap-3" style="padding: 7em 0 4em 0">
+    <div class="container d-flex flex-column gap-3" style="padding: 6.5em 0 5em 0">
         <div v-for="product in game_data.products">
             <div class="d-flex w-100 gap-3" v-if="product.current_level > 0">
                 <div class="d-flex flex-column gap-2 align-items-center"
@@ -43,7 +47,7 @@
                          alt="img" height="96px" width="96px" v-bind:src="product.image_url">
                     <span class="fw-bold text-secondary small">LVL {{ product.current_level }}</span>
                 </div>
-                <div class="d-flex flex-column flex-grow-1 gap-1">
+                <div class="d-flex flex-column flex-grow-1 gap-1 w-25">
                     <span class="fw-bolder text-uppercase d-inline-block text-truncate">{{ product.name }}</span>
                     <div class="d-flex align-items-center justify-content-between m-0 p-0 small">
                         <span class="text-dark fw-bold me-2">Current p/c:</span>
@@ -62,9 +66,9 @@
                         </div>
                     </div>
                     <div class="d-flex align-items-center justify-content-between m-0 p-0">
-                        <a class="btn btn-lg btn-outline-dark fw-bold w-100 d-flex align-items-center justify-content-center"
+                        <a v-bind:class="'btn btn-lg btn-success fw-bold w-100 d-flex align-items-center justify-content-center' + (product.upgrade_price > game_data.current_coins ? ' disabled' : '')"
                            @click="BuyProduct(TelegramID, product.id)">
-                            <span class="text-uppercase me-2">BUY</span>
+                            <span class="text-uppercase me-1">BUY</span>
                             <img src="asset/img/coin.svg" alt="coin" height="22px" class="me-1">
                             <span class="">{{ FormatNumber(product.upgrade_price) }}</span>
                         </a>
@@ -72,12 +76,10 @@
                 </div>
             </div>
             <div class="" v-else>
-                <p class="fw-bolder text-uppercase p-0 m-0 mb-2">
-                    <span class="me-2">{{ product.name }}</span>
-                    <span class="text-body-tertiary float-end">LVL {{ product.current_level }}</span>
-                </p>
-                <a class="btn btn-outline-dark fw-bold w-100" @click="BuyProduct(TelegramID, product.id)">
-                    <span class="text-uppercase me-2">UNLOCK</span>
+                <span class="fw-bolder text-uppercase d-block mb-2 text-truncate">{{ product.name }}</span>
+                <a v-bind:class="'btn btn-success fw-bold w-100' + (product.upgrade_price > game_data.current_coins ? ' disabled' : '')"
+                   @click="BuyProduct(TelegramID, product.id)">
+                    <span class="text-uppercase me-1">UNLOCK</span>
                     <img src="asset/img/coin.svg" alt="coin" height="18px" class="me-1">
                     <span class="">{{ FormatNumber(product.upgrade_price) }}</span>
                 </a>

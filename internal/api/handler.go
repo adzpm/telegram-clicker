@@ -75,11 +75,13 @@ func mergeProducts(
 
 func CreateGameResponse(user *model.User, allProducts []model.Product, userProducts []model.UserProduct) *model.Game {
 	return &model.Game{
-		UserID:       user.ID,
-		TelegramID:   user.TelegramID,
-		LastSeen:     user.LastSeen,
-		CurrentCoins: user.Coins,
-		Products:     mergeProducts(allProducts, userProducts),
+		UserID:           user.ID,
+		TelegramID:       user.TelegramID,
+		LastSeen:         user.LastSeen,
+		CurrentCoins:     user.Coins,
+		CurrentGold:      user.Gold,
+		CurrentInvestors: user.Investors,
+		Products:         mergeProducts(allProducts, userProducts),
 	}
 }
 

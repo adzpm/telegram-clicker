@@ -53,7 +53,7 @@ let Application = Vue.createApp({
             let destinationX = x + (Math.random() - 0.5) * 2 * 75,
                 destinationY = y + (Math.random() - 0.5) * 2 * 75,
                 particle = document.createElement('particle'),
-                symbols = ['$', '$', '$']
+                symbols = ['$', '↑', '%']
 
             document.body.appendChild(particle);
             particle.innerHTML = symbols[Math.floor(Math.random() * symbols.length)]
