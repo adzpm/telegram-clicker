@@ -185,10 +185,10 @@ func (a *API) ClickProduct(c *fiber.Ctx) (err error) {
 	}
 
 	if userProduct.Level > 0 {
-		coinsClicked = math.CalculateCoinsPerClickVariant2(
+		coinsClicked = math.CalculateCoinsPerClick(
 			product.StartCoinsPerClick,
 			userProduct.Level,
-			product.CoinsPerClickPerLevel,
+			product.CoinsPerClickMultiplier,
 		)
 	}
 
