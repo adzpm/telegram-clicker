@@ -69,7 +69,7 @@
                                 </div>
                             </div>
                             <div class="d-flex align-items-center justify-content-between m-0 p-0">
-                                <a v-bind:class="'btn btn-lg btn-success fw-bold w-100 d-flex align-items-center justify-content-center clickable' + (product.upgrade_price > game_data.current_coins ? ' disabled' : ' animate__animated animate__headShake animate__infinite')"
+                                <a v-bind:class="'btn btn-lg btn-success fw-bold w-100 d-flex align-items-center justify-content-center clickable' + (product.upgrade_price > game_data.current_coins ? ' disabled' : '')"
                                    @click="BuyProduct(TelegramID, product.id); PopEffect($event)">
                                     <span class="text-uppercase me-1">BUY</span>
                                     <img src="asset/img/coin.svg" alt="coin" height="22px" class="me-1">
@@ -80,7 +80,7 @@
                     </div>
                     <div class="" v-else>
                         <span class="fw-bolder text-uppercase d-block mb-2 text-truncate">{{ product.name }}</span>
-                        <a v-bind:class="'btn btn-lg btn-success fw-bold w-100 d-flex align-items-center justify-content-center clickable' + (product.upgrade_price > game_data.current_coins ? ' disabled' : ' animate__animated animate__headShake animate__infinite')"
+                        <a v-bind:class="'btn btn-lg btn-success fw-bold w-100 d-flex align-items-center justify-content-center clickable' + (product.upgrade_price > game_data.current_coins ? ' disabled' : '')"
                            @click="BuyProduct(TelegramID, product.id); PopEffect($event)">
                             <span class="text-uppercase me-1">UNLOCK</span>
                             <img src="asset/img/coin.svg" alt="coin" height="22px" class="me-1">
