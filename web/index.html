@@ -118,7 +118,7 @@
                     </div>
                 </div>
                 <a v-bind:class="'btn btn-lg btn-success fw-bold w-100 d-flex align-items-center justify-content-center clickable' + (game_data.current_investors < game_data.investors_after_reset ? '' : ' disabled')"
-                   @click="Reset(TelegramID); PopEffect($event)">
+                   @click="Reset(TelegramID); PopEffect($event); state.current = 'main'">
                     <span class="text-uppercase me-1">RESET</span>
                 </a>
             </div>
