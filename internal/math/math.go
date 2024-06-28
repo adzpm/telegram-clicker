@@ -1,7 +1,7 @@
 package math
 
 const (
-	OneInvestorCoins   = 5000000 // one investor for 5M coins
+	OneInvestorCoins   = 1000000 // one investor for 1M coins
 	InvestorMultiplier = 0.02    // 2% for each investor
 )
 
