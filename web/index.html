@@ -99,7 +99,7 @@
                     </div>
                     <div class="d-flex flex-column gap-1 justify-content-center align-items-center text-center">
                         <span class="text-uppercase">Current multiplier</span>
-                        <span class="display-4">x{{ game_data.current_investors_multiplier }}</span>
+                        <span class="display-4">x{{ FormatFloat(game_data.current_investors_multiplier) }}</span>
                     </div>
                 </div>
                 <div class="d-flex flex-column gap-1 justify-content-center col-12 align-items-center">
@@ -114,7 +114,7 @@
                     </div>
                     <div class="d-flex flex-column gap-1 justify-content-center align-items-center text-center">
                         <span class="text-uppercase">Total multiplier after reset</span>
-                        <span class="display-4">x{{ game_data.investors_multiplier_after_reset }}</span>
+                        <span class="display-4">x{{ FormatFloat(game_data.investors_multiplier_after_reset) }}</span>
                     </div>
                 </div>
                 <a v-bind:class="'btn btn-lg btn-success fw-bold w-100 d-flex align-items-center justify-content-center clickable' + (game_data.current_investors < game_data.investors_after_reset ? '' : ' disabled')"

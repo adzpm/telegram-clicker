@@ -113,6 +113,10 @@ let Application = Vue.createApp({
             }
         },
 
+        FormatFloat(num) {
+            return parseFloat(num.toFixed(1))
+        },
+
         FormatNumber(num) {
             const units = [
                 {value: 1e45, suffix: ' INF'},
