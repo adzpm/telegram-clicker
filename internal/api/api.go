@@ -38,9 +38,10 @@ func (a *API) setupRoutes(ctx context.Context) {
 
 	a.srv.Static("/", a.cfg.WebPath)
 
-	a.srv.Get("/enter", a.Enter)
+	a.srv.Get("/enter", a.EnterGame)
 	a.srv.Get("/click", a.ClickProduct)
 	a.srv.Get("/buy", a.BuyProduct)
+	a.srv.Get("/reset", a.ResetGame)
 }
 
 func (a *API) Start(ctx context.Context) error {

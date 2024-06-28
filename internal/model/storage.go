@@ -2,12 +2,13 @@ package model
 
 type (
 	User struct {
-		ID         uint64 `json:"id"`
-		TelegramID uint64 `json:"telegram_id"`
-		LastSeen   uint64 `json:"last_seen"`
-		Coins      uint64 `json:"coins"`
-		Gold       uint64 `json:"gold"`
-		Investors  uint64 `json:"investors"`
+		ID          uint64 `json:"id"`
+		TelegramID  uint64 `json:"telegram_id"`
+		LastSeen    uint64 `json:"last_seen"`
+		Coins       uint64 `json:"coins"`
+		EarnedCoins uint64 `json:"earned_coins"`
+		Gold        uint64 `json:"gold"`
+		Investors   uint64 `json:"investors"`
 	}
 
 	UserProduct struct {

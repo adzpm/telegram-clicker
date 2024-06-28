@@ -13,13 +13,13 @@ let Application = Vue.createApp({
                     title: 'Main',
                     image_url: '/asset/img/step.svg',
                 }, {
-                    name: stateShop,
-                    title: 'Shop',
-                    image_url: '/asset/img/shop.svg',
-                }, {
                     name: stateInvestors,
                     title: 'Investors',
                     image_url: '/asset/img/invest.svg',
+                }, {
+                    name: stateShop,
+                    title: 'Shop',
+                    image_url: '/asset/img/shop.svg',
                 }, {
                     name: stateTasks,
                     title: 'Tasks',
@@ -58,6 +58,17 @@ let Application = Vue.createApp({
 
         BuyProduct(telegram_id, product_id) {
             let url = this.CurrentAddress + '/buy' + '?telegram_id=' + telegram_id + '&product_id=' + product_id
+
+            axios.get(url).then(response => {
+                console.log(response.data)
+                this.game_data = response.data
+            }).catch(error => {
+                this.ShowError(error.response.data)
+            })
+        },
+
+        Reset(telegram_id) {
+            let url = this.CurrentAddress + '/reset' + '?telegram_id=' + telegram_id
 
             axios.get(url).then(response => {
                 console.log(response.data)

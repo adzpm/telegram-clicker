@@ -1,6 +1,11 @@
 package math
 
-func CalculateCoinsPerClick(startCoins, level uint64, coinsMultiplier float64) uint64 {
+const (
+	OneInvestorCoins   = 5000000 // one investor for 5M coins
+	InvestorMultiplier = 0.02    // 2% for each investor
+)
+
+func CalculateCoinsPerClick(startCoins, level uint64, coinsMultiplier, investorsMultiplier float64) uint64 {
 	if level == 0 {
 		return 0
 	}
@@ -10,7 +15,7 @@ func CalculateCoinsPerClick(startCoins, level uint64, coinsMultiplier float64) u
 		coinsPerClick *= coinsMultiplier
 	}
 
-	return uint64(coinsPerClick)
+	return uint64(coinsPerClick * investorsMultiplier)
 }
 
 // CalculateUpgradePrice calculates the price of the upgrade to the next level.
@@ -25,4 +30,12 @@ func CalculateUpgradePrice(startPrice, level uint64, priceMultiplier float64) ui
 	}
 
 	return uint64(upgradePrice)
+}
+
+func CalculateInvestorsCount(earnedCoins uint64) uint64 {
+	return earnedCoins / OneInvestorCoins
+}
+
+func CalculateInvestorsMultiplier(investors uint64) float64 {
+	return 1 + float64(investors)*InvestorMultiplier
 }

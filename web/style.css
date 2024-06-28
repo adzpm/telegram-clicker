@@ -40,7 +40,7 @@ particle {
 
 .state-enter-active,
 .state-leave-active {
-    transition: all .3s ease;
+    transition: all .15s ease;
 }
 
 .state-enter-from {
@@ -56,7 +56,7 @@ particle {
 
 /*Анимация уменьшения при нажатии на элемент и увеличении при отпускании*/
 .clickable {
-    transition: all .05s ease;
+    transition: all .15s ease;
 }
 
 .clickable:active {

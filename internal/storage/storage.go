@@ -105,11 +105,12 @@ func (s *Storage) InsertUser(telegramID, coins, gold, investors uint64) (user *m
 	s.lgr.Debug("inserting user", zap.Uint64("telegram_id", telegramID))
 
 	if res := s.str.Table("users").Create(&model.User{
-		TelegramID: telegramID,
-		LastSeen:   uint64(time.Now().Unix()),
-		Coins:      coins,
-		Gold:       gold,
-		Investors:  investors,
+		TelegramID:  telegramID,
+		LastSeen:    uint64(time.Now().Unix()),
+		Coins:       coins,
+		EarnedCoins: coins,
+		Gold:        gold,
+		Investors:   investors,
 	}); res.Error != nil {
 		return nil, res.Error
 	}
@@ -149,6 +150,57 @@ func (s *Storage) UpdateUserCoins(telegramID, coins uint64) (user *model.User, e
 	)
 
 	if res := s.str.Table("users").Where("telegram_id = ?", telegramID).Update("coins", coins); res.Error != nil {
+		return nil, res.Error
+	}
+
+	if user, err = s.SelectUser(telegramID); err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
+
+func (s *Storage) UpdateUserGold(telegramID, gold uint64) (user *model.User, err error) {
+	s.lgr.Debug("updating user gold",
+		zap.Uint64("telegram_id", telegramID),
+		zap.Uint64("gold", gold),
+	)
+
+	if res := s.str.Table("users").Where("telegram_id = ?", telegramID).Update("gold", gold); res.Error != nil {
+		return nil, res.Error
+	}
+
+	if user, err = s.SelectUser(telegramID); err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
+
+func (s *Storage) UpdateUserInvestors(telegramID, investors uint64) (user *model.User, err error) {
+	s.lgr.Debug("updating user investors",
+		zap.Uint64("telegram_id", telegramID),
+		zap.Uint64("investors", investors),
+	)
+
+	if res := s.str.Table("users").Where("telegram_id = ?", telegramID).Update("investors", investors); res.Error != nil {
+		return nil, res.Error
+	}
+
+	if user, err = s.SelectUser(telegramID); err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
+
+func (s *Storage) UpdateUserEarnedCoins(telegramID, earnedCoins uint64) (user *model.User, err error) {
+	s.lgr.Debug("updating user earned coins",
+		zap.Uint64("telegram_id", telegramID),
+		zap.Uint64("earned_coins", earnedCoins),
+	)
+
+	if res := s.str.Table("users").Where("telegram_id = ?", telegramID).Update("earned_coins", earnedCoins); res.Error != nil {
 		return nil, res.Error
 	}
 

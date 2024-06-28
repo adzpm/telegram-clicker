@@ -11,11 +11,10 @@
     <link rel="stylesheet" href="style.css">
     <script src="pkg/axios.min.js"></script>
     <script src="pkg/vue.global.prod.js"></script>
-    <script src="pkg/countup.min.js"></script>
 </head>
 <body class="vh-100" id="app">
 
-<div v-if="game_data !== null">
+<div class="h-100" v-if="game_data !== null">
     <div class="p-3 navbar fixed-top gap-3 bg-body-tertiary border-bottom border-dark shadow">
         <div>
             <img class="rounded-circle border border-1 border-black"
@@ -38,7 +37,7 @@
         </div>
     </div>
 
-    <div style="padding: 8em 0 6em 0">
+    <div class="h-100" style="padding: 8em 0 6em 0">
         <Transition name="state" mode="out-in">
             <div class="container d-flex flex-column gap-3 px-3" v-if="state.current === 'main'">
                 <div v-for="product in game_data.products">
@@ -90,16 +89,49 @@
                 </div>
             </div>
 
-            <div class="container d-flex flex-column gap-3 px-3 text-center" v-else-if="state.current === 'shop'">
-                <h1>Shop in progress</h1>
+            <div class="container d-flex flex-column gap-3 px-3 align-items-center justify-content-between h-100"
+                 v-else-if="state.current === 'investors'">
+                <div class="row row-cols-2 w-100">
+                    <div class="d-flex flex-column gap-1 justify-content-center align-items-center text-center">
+                        <span class="text-uppercase">Current investors</span>
+                        <span class="display-4">{{ game_data.current_investors }}</span>
+                    </div>
+                    <div class="d-flex flex-column gap-1 justify-content-center align-items-center text-center">
+                        <span class="text-uppercase">Current multiplier</span>
+                        <span class="display-4">x{{ game_data.current_investors_multiplier }}</span>
+                    </div>
+                </div>
+                <div class="d-flex flex-column gap-1 justify-content-center col-12 align-items-center">
+                    <span class="lead text-uppercase">You can claim</span>
+                    <span class="display-3">{{ FormatNumber(game_data.investors_after_reset) }}</span>
+                    <span class="lead text-uppercase">investors</span>
+                </div>
+                <div class="row row-cols-2 w-100">
+                    <div class="d-flex flex-column gap-1 justify-content-center align-items-center text-center">
+                        <span class="text-uppercase">Bonus per investor</span>
+                        <span class="display-4">{{ game_data.percents_per_investor }}%</span>
+                    </div>
+                    <div class="d-flex flex-column gap-1 justify-content-center align-items-center text-center">
+                        <span class="text-uppercase">Total multiplier after reset</span>
+                        <span class="display-4">x{{ game_data.investors_multiplier_after_reset }}</span>
+                    </div>
+                </div>
+                <a v-bind:class="'btn btn-lg btn-success fw-bold w-100 d-flex align-items-center justify-content-center clickable'"
+                   @click="Reset(TelegramID); PopEffect($event)">
+                    <span class="text-uppercase me-1">RESET</span>
+                </a>
             </div>
 
-            <div class="container d-flex flex-column gap-3 px-3 text-center" v-else-if="state.current === 'investors'">
-                <h1>Investors in progress</h1>
+            <div class="container d-flex flex-column gap-3 px-3 align-items-center justify-content-between h-100"
+                 v-else-if="state.current === 'shop'">
+                <h1 class="text-center">The shop is not yet available</h1>
+                <p class="lead">Coming soon...</p>
             </div>
 
-            <div class="container d-flex flex-column gap-3 px-3 text-center" v-else-if="state.current === 'tasks'">
-                <h1>Coming soon</h1>
+            <div class="container d-flex flex-column gap-3 px-3 align-items-center justify-content-between h-100"
+                 v-else-if="state.current === 'tasks'">
+                <h1 class="text-center">Nothing</h1>
+                <p class="lead">Coming soon...</p>
             </div>
         </Transition>
     </div>
