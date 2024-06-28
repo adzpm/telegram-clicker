@@ -37,3 +37,28 @@ particle {
     opacity: 0;
     transform: translateY(-50%);
 }
+
+.state-enter-active,
+.state-leave-active {
+    transition: all .3s ease;
+}
+
+.state-enter-from {
+    opacity: 0;
+    transform: translateX(50%) rotateZ(10deg);
+}
+
+.state-leave-to {
+    opacity: 0;
+    transform: translateX(-50%) rotateZ(-10deg);
+
+}
+
+/*Анимация уменьшения при нажатии на элемент и увеличении при отпускании*/
+.clickable {
+    transition: all .05s ease;
+}
+
+.clickable:active {
+    transform: scale(.95);
+}

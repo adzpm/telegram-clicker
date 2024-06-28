@@ -1,6 +1,31 @@
+let stateMain = 'main',
+    stateShop = 'shop',
+    stateInvestors = 'investors',
+    stateTasks = 'tasks'
+
 let Application = Vue.createApp({
     data: function () {
         return {
+            state: {
+                current: stateMain,
+                all: [{
+                    name: stateMain,
+                    title: 'Main',
+                    image_url: '/asset/img/step.svg',
+                }, {
+                    name: stateShop,
+                    title: 'Shop',
+                    image_url: '/asset/img/shop.svg',
+                }, {
+                    name: stateInvestors,
+                    title: 'Investors',
+                    image_url: '/asset/img/invest.svg',
+                }, {
+                    name: stateTasks,
+                    title: 'Tasks',
+                    image_url: '/asset/img/task.svg',
+                }],
+            },
             started_from_telegram: false,
             telegram_data: null,
             game_data: null,
@@ -10,7 +35,7 @@ let Application = Vue.createApp({
 
     methods: {
         Enter(telegram_id) {
-            let url = this.CurrentURL + '/enter' + '?telegram_id=' + telegram_id
+            let url = this.CurrentAddress + '/enter' + '?telegram_id=' + telegram_id
 
             axios.get(url).then(response => {
                 console.log(response.data)
@@ -21,7 +46,7 @@ let Application = Vue.createApp({
         },
 
         Click(telegram_id, product_id) {
-            let url = this.CurrentURL + '/click' + '?telegram_id=' + telegram_id + '&product_id=' + product_id
+            let url = this.CurrentAddress + '/click' + '?telegram_id=' + telegram_id + '&product_id=' + product_id
 
             axios.get(url).then(response => {
                 console.log(response.data)
@@ -32,7 +57,7 @@ let Application = Vue.createApp({
         },
 
         BuyProduct(telegram_id, product_id) {
-            let url = this.CurrentURL + '/buy' + '?telegram_id=' + telegram_id + '&product_id=' + product_id
+            let url = this.CurrentAddress + '/buy' + '?telegram_id=' + telegram_id + '&product_id=' + product_id
 
             axios.get(url).then(response => {
                 console.log(response.data)
@@ -79,17 +104,20 @@ let Application = Vue.createApp({
 
         FormatNumber(num) {
             const units = [
-                {value: 1e36, suffix: ' INFINITY'},
-                {value: 1e33, suffix: ' QUINTILLIARD'},
-                {value: 1e30, suffix: ' QUINTILLION'},
-                {value: 1e27, suffix: ' QUADRILLIARD'},
-                {value: 1e24, suffix: ' QUADRILLION'},
-                {value: 1e21, suffix: ' TRILLIARD'},
-                {value: 1e18, suffix: ' TRILLION'},
-                {value: 1e15, suffix: ' BILLIARD'},
-                {value: 1e12, suffix: ' BILLION'},
-                {value: 1e9, suffix: ' MILLIARD'},
-                {value: 1e6, suffix: ' MILLION'},
+                {value: 1e45, suffix: ' INF'},
+                {value: 1e42, suffix: ' TREDECILLION'},
+                {value: 1e39, suffix: ' DUODECILLION'},
+                {value: 1e36, suffix: ' UNDECILLION'},
+                {value: 1e33, suffix: ' DECILLION'},
+                {value: 1e30, suffix: ' NONILLION'},
+                {value: 1e27, suffix: ' OCTILLION'},
+                {value: 1e24, suffix: ' SEPTILLION'},
+                {value: 1e21, suffix: ' SEXTILLION'},
+                {value: 1e18, suffix: ' QUINTILLION'},
+                {value: 1e15, suffix: ' QUADRILLION'},
+                {value: 1e12, suffix: ' TRILLION'},
+                {value: 1e09, suffix: ' BILLION'},
+                {value: 1e06, suffix: ' MILLION'},
             ];
 
             for (let unit of units) {
@@ -103,7 +131,7 @@ let Application = Vue.createApp({
     },
 
     computed: {
-        CurrentURL() {
+        CurrentAddress() {
             let url = window.location.href
             return url.substring(0, url.lastIndexOf('/'))
         },
