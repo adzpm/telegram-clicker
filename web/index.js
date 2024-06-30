@@ -47,7 +47,8 @@ let Application = Vue.createApp({
         },
 
         Click(e, telegram_id, card_id) {
-            if (this.percents[card_id] !== 100) return
+            let card = this.game_data.cards[card_id]
+            if (Date.now() / 1000 < card.next_click) return
 
             let url = this.CurrentAddress + '/click' + '?telegram_id=' + telegram_id + '&card_id=' + card_id
 
