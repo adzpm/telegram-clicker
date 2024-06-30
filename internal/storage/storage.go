@@ -30,8 +30,8 @@ type (
 var (
 	migrate = []interface{}{
 		model.User{},
-		model.UserProduct{},
-		model.Product{},
+		model.UserCard{},
+		model.Card{},
 	}
 )
 
@@ -62,24 +62,24 @@ func NewStorage(lgr *zap.Logger, cfg *Config) (*Storage, error) {
 		cfg: cfg,
 	}
 
-	return res, res.FillProductsFromFileIfTableEmpty()
+	return res, res.FillCardsFromFileIfTableEmpty()
 }
 
-func (s *Storage) FillProductsFromFileIfTableEmpty() error {
-	var products []model.Product
+func (s *Storage) FillCardsFromFileIfTableEmpty() error {
+	var cards []model.Card
 
-	res := s.str.Table("products").Find(&products)
+	res := s.str.Table("cards").Find(&cards)
 	if res.Error != nil {
 		return res.Error
 	}
 
-	if len(products) > 0 {
+	if len(cards) > 0 {
 		return nil
 	}
 
-	s.lgr.Debug("filling products from file")
+	s.lgr.Debug("filling cards from file")
 
-	file, err := os.Open("products.json")
+	file, err := os.Open("cards.json")
 	if err != nil {
 		return err
 	}
@@ -88,12 +88,12 @@ func (s *Storage) FillProductsFromFileIfTableEmpty() error {
 
 	fileBytes, err := io.ReadAll(file)
 
-	if err = json.Unmarshal(fileBytes, &products); err != nil {
+	if err = json.Unmarshal(fileBytes, &cards); err != nil {
 		return err
 	}
 
-	for _, product := range products {
-		if res = s.str.Table("products").Create(&product); res.Error != nil {
+	for _, card := range cards {
+		if res = s.str.Table("cards").Create(&card); res.Error != nil {
 			return res.Error
 		}
 	}
@@ -228,85 +228,85 @@ func (s *Storage) UpdateUserLastSeen(telegramID, lastSeen uint64) (user *model.U
 	return user, nil
 }
 
-func (s *Storage) InsertUserProduct(telegramID, productID, level uint64) (userProduct *model.UserProduct, err error) {
-	s.lgr.Debug("inserting user product",
+func (s *Storage) InsertUserCard(telegramID, cardID, level uint64) (userCard *model.UserCard, err error) {
+	s.lgr.Debug("inserting user card",
 		zap.Uint64("telegram_id", telegramID),
-		zap.Uint64("product_id", productID),
+		zap.Uint64("card_id", cardID),
 		zap.Uint64("level", level),
 	)
 
-	if res := s.str.Table("user_products").Create(&model.UserProduct{
+	if res := s.str.Table("user_cards").Create(&model.UserCard{
 		TelegramID: telegramID,
-		ProductID:  productID,
+		CardID:     cardID,
 		Level:      level,
 	}); res.Error != nil {
 		return nil, res.Error
 	}
 
-	if userProduct, err = s.SelectUserProduct(telegramID, productID); err != nil {
+	if userCard, err = s.SelectUserCard(telegramID, cardID); err != nil {
 		return nil, err
 	}
 
-	return userProduct, nil
+	return userCard, nil
 }
 
-func (s *Storage) SelectUserProduct(telegramID, productID uint64) (userProduct *model.UserProduct, err error) {
-	s.lgr.Debug("selecting user product",
+func (s *Storage) SelectUserCard(telegramID, cardID uint64) (userCard *model.UserCard, err error) {
+	s.lgr.Debug("selecting user card",
 		zap.Uint64("telegram_id", telegramID),
-		zap.Uint64("product_id", productID),
+		zap.Uint64("card_id", cardID),
 	)
 
-	if res := s.str.Table("user_products").Where("telegram_id = ? AND product_id = ?", telegramID, productID).First(&userProduct); res.Error != nil {
+	if res := s.str.Table("user_cards").Where("telegram_id = ? AND card_id = ?", telegramID, cardID).First(&userCard); res.Error != nil {
 		return nil, res.Error
 	}
 
-	return userProduct, nil
+	return userCard, nil
 }
 
-func (s *Storage) SelectUserProducts(telegramID uint64) (userProducts []model.UserProduct, err error) {
-	s.lgr.Debug("selecting user products", zap.Uint64("telegram_id", telegramID))
+func (s *Storage) SelectUserCards(telegramID uint64) (userCards []model.UserCard, err error) {
+	s.lgr.Debug("selecting user cards", zap.Uint64("telegram_id", telegramID))
 
-	if res := s.str.Table("user_products").Where("telegram_id = ?", telegramID).Find(&userProducts); res.Error != nil {
+	if res := s.str.Table("user_cards").Where("telegram_id = ?", telegramID).Find(&userCards); res.Error != nil {
 		return nil, res.Error
 	}
 
-	return userProducts, nil
+	return userCards, nil
 }
 
-func (s *Storage) UpdateUserProductLevel(telegramID, productID, level uint64) (userProduct *model.UserProduct, err error) {
-	s.lgr.Debug("updating user product level",
+func (s *Storage) UpdateUserCardLevel(telegramID, cardID, level uint64) (userCard *model.UserCard, err error) {
+	s.lgr.Debug("updating user card level",
 		zap.Uint64("telegram_id", telegramID),
-		zap.Uint64("product_id", productID),
+		zap.Uint64("card_id", cardID),
 		zap.Uint64("level", level),
 	)
 
-	if res := s.str.Table("user_products").Where("telegram_id = ? AND product_id = ?", telegramID, productID).Update("level", level); res.Error != nil {
+	if res := s.str.Table("user_cards").Where("telegram_id = ? AND card_id = ?", telegramID, cardID).Update("level", level); res.Error != nil {
 		return nil, res.Error
 	}
 
-	if userProduct, err = s.SelectUserProduct(telegramID, productID); err != nil {
+	if userCard, err = s.SelectUserCard(telegramID, cardID); err != nil {
 		return nil, err
 	}
 
-	return userProduct, nil
+	return userCard, nil
 }
 
-func (s *Storage) SelectProduct(productID uint64) (products *model.Product, err error) {
-	s.lgr.Debug("selecting product", zap.Uint64("product_id", productID))
+func (s *Storage) SelectCard(cardID uint64) (cards *model.Card, err error) {
+	s.lgr.Debug("selecting card", zap.Uint64("card_id", cardID))
 
-	if res := s.str.Table("products").Where("id = ?", productID).First(&products); res.Error != nil {
+	if res := s.str.Table("cards").Where("id = ?", cardID).First(&cards); res.Error != nil {
 		return nil, res.Error
 	}
 
-	return products, nil
+	return cards, nil
 }
 
-func (s *Storage) SelectProducts() (products []model.Product, err error) {
-	s.lgr.Debug("selecting all products")
+func (s *Storage) SelectCards() (cards []model.Card, err error) {
+	s.lgr.Debug("selecting all cards")
 
-	if res := s.str.Table("products").Find(&products); res.Error != nil {
+	if res := s.str.Table("cards").Find(&cards); res.Error != nil {
 		return nil, res.Error
 	}
 
-	return products, nil
+	return cards, nil
 }

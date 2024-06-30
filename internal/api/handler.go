@@ -13,81 +13,77 @@ import (
 	"github.com/adzpm/telegram-clicker/internal/model"
 )
 
-func mergeProducts(
+func mergeCards(
 	user *model.User,
-	allProducts []model.Product,
-	userProducts []model.UserProduct,
-) map[uint64]*model.GameProduct {
+	allCards []model.Card,
+	userCards []model.UserCard,
+) map[uint64]*model.GameCard {
 	var (
-		products        = make(map[uint64]*model.GameProduct, len(allProducts))
-		allProductsMap  = make(map[uint64]*model.Product, len(allProducts))
-		userProductsMap = make(map[uint64]*model.UserProduct, len(userProducts))
+		cards        = make(map[uint64]*model.GameCard, len(allCards))
+		allCardsMap  = make(map[uint64]*model.Card, len(allCards))
+		userCardsMap = make(map[uint64]*model.UserCard, len(userCards))
 	)
 
-	// prepare allProducts map
-	for _, product := range allProducts {
-		allProductsMap[product.ID] = &product
+	// prepare allCards map
+	for _, card := range allCards {
+		allCardsMap[card.ID] = &card
 	}
 
-	// prepare userProducts map
-	for _, userProduct := range userProducts {
-		userProductsMap[userProduct.ProductID] = &userProduct
+	// prepare userCards map
+	for _, userCard := range userCards {
+		userCardsMap[userCard.CardID] = &userCard
 	}
 
-	// fill products map
-	for _, product := range allProducts {
-		products[product.ID] = &model.GameProduct{
-			ID:                     product.ID,
-			Name:                   product.Name,
-			ImageURL:               product.ImageURL,
-			CurrentLevel:           0,
-			MaxLevel:               product.MaxLevel,
-			CurrentPrice:           0,
-			NextLevelPrice:         product.StartProductPrice,
-			CurrentCoinsPerClick:   0,
-			NextLevelCoinsPerClick: product.StartCoinsPerClick,
+	// fill cards map
+	for _, card := range allCards {
+		cards[card.ID] = &model.GameCard{
+			ID:                     card.ID,
+			Name:                   card.Name,
+			ImageURL:               card.ImageURL,
+			MaxLevel:               card.MaxLevel,
+			NextLevelPrice:         card.Price,
+			NextLevelCoinsPerClick: card.CoinsPerClick,
 		}
 	}
 
-	// update products map with userProducts data
-	for _, userProduct := range userProducts {
-		if _, ok := products[userProduct.ProductID]; !ok {
+	// update cards map with userCards data
+	for _, userCard := range userCards {
+		if _, ok := cards[userCard.CardID]; !ok {
 			continue
 		}
 
-		if _, ok := allProductsMap[userProduct.ProductID]; !ok {
+		if _, ok := allCardsMap[userCard.CardID]; !ok {
 			continue
 		}
 
-		if userProduct.Level < 1 {
+		if userCard.Level < 1 {
 			continue
 		}
 
 		var (
-			productID          = userProduct.ProductID
-			level              = userProduct.Level
-			startPrice         = allProductsMap[productID].StartProductPrice
-			startCoinsPerClick = allProductsMap[productID].StartCoinsPerClick
-			priceMp            = allProductsMap[productID].ProductPriceMultiplier
-			coinsMP            = allProductsMap[productID].CoinsPerClickMultiplier
+			cardID             = userCard.CardID
+			level              = userCard.Level
+			startPrice         = allCardsMap[cardID].Price
+			startCoinsPerClick = allCardsMap[cardID].CoinsPerClick
+			priceMp            = allCardsMap[cardID].PriceMultiplier
 			invMp              = math.CalculateInvestorsMultiplier(user.Investors)
 			nextPrice          = math.CalculateUpgradePrice(startPrice, level, priceMp)
 			curPrice           = math.CalculateUpgradePrice(startPrice, level-1, priceMp)
-			nextCoins          = math.CalculateCoinsPerClick(startCoinsPerClick, level+1, coinsMP, invMp)
-			curCoins           = math.CalculateCoinsPerClick(startCoinsPerClick, level, coinsMP, invMp)
+			nextCoins          = math.CalculateAlgebraCoinsPerClick(startCoinsPerClick, level+1, invMp)
+			curCoins           = math.CalculateAlgebraCoinsPerClick(startCoinsPerClick, level, invMp)
 		)
 
-		products[productID].CurrentLevel = level
-		products[productID].CurrentPrice = curPrice
-		products[productID].NextLevelPrice = nextPrice
-		products[productID].CurrentCoinsPerClick = curCoins
-		products[productID].NextLevelCoinsPerClick = nextCoins
+		cards[cardID].CurrentLevel = level
+		cards[cardID].CurrentPrice = curPrice
+		cards[cardID].NextLevelPrice = nextPrice
+		cards[cardID].CurrentCoinsPerClick = curCoins
+		cards[cardID].NextLevelCoinsPerClick = nextCoins
 	}
 
-	return products
+	return cards
 }
 
-func CreateGameResponse(user *model.User, allProducts []model.Product, userProducts []model.UserProduct) *model.Game {
+func CreateGameResponse(user *model.User, allCards []model.Card, userCards []model.UserCard) *model.Game {
 	var (
 		icount = math.CalculateInvestorsCount(user.EarnedCoins)
 		curmlt = math.CalculateInvestorsMultiplier(user.Investors)
@@ -107,7 +103,7 @@ func CreateGameResponse(user *model.User, allProducts []model.Product, userProdu
 		InvestorsAfterReset:           icount,
 		PercentsPerInvestor:           math.InvestorMultiplier * 100,
 
-		Products: mergeProducts(user, allProducts, userProducts),
+		Cards: mergeCards(user, allCards, userCards),
 	}
 }
 
@@ -143,7 +139,7 @@ func (a *API) EnterGame(c *fiber.Ctx) (err error) {
 				return Throw500Error(c, err)
 			}
 
-			if _, err = a.str.InsertUserProduct(user.TelegramID, 1, 1); err != nil {
+			if _, err = a.str.InsertUserCard(user.TelegramID, 1, 1); err != nil {
 				return Throw500Error(c, err)
 			}
 		} else {
@@ -152,16 +148,16 @@ func (a *API) EnterGame(c *fiber.Ctx) (err error) {
 	}
 
 	var (
-		timeNow      = uint64(time.Now().Unix())
-		allProducts  []model.Product
-		userProducts []model.UserProduct
+		timeNow   = uint64(time.Now().Unix())
+		allCards  []model.Card
+		userCards []model.UserCard
 	)
 
-	if allProducts, err = a.str.SelectProducts(); err != nil {
+	if allCards, err = a.str.SelectCards(); err != nil {
 		return Throw500Error(c, err)
 	}
 
-	if userProducts, err = a.str.SelectUserProducts(user.TelegramID); err != nil {
+	if userCards, err = a.str.SelectUserCards(user.TelegramID); err != nil {
 		return Throw500Error(c, err)
 	}
 
@@ -171,29 +167,29 @@ func (a *API) EnterGame(c *fiber.Ctx) (err error) {
 		return Throw500Error(c, err)
 	}
 
-	return Throw200Response(c, CreateGameResponse(user, allProducts, userProducts))
+	return Throw200Response(c, CreateGameResponse(user, allCards, userCards))
 }
 
-func (a *API) ClickProduct(c *fiber.Ctx) (err error) {
+func (a *API) ClickCard(c *fiber.Ctx) (err error) {
 	var (
 		tgID int
-		prID int
+		cdID int
 	)
 
 	if tgID = c.QueryInt("telegram_id"); tgID == 0 {
 		return Throw400Error(c, "telegram_id is required")
 	}
 
-	if prID = c.QueryInt("product_id"); prID == 0 {
-		return Throw400Error(c, "product_id is required")
+	if cdID = c.QueryInt("card_id"); cdID == 0 {
+		return Throw400Error(c, "card_id is required")
 	}
 
-	a.lgr.Info("try to click", zap.Int("telegram_id", tgID), zap.Int("product_id", prID))
+	a.lgr.Info("try to click", zap.Int("telegram_id", tgID), zap.Int("card_id", cdID))
 
 	var (
 		user         *model.User
-		product      *model.Product
-		userProduct  *model.UserProduct
+		card         *model.Card
+		userCard     *model.UserCard
 		coinsClicked uint64 = 0
 	)
 
@@ -201,19 +197,18 @@ func (a *API) ClickProduct(c *fiber.Ctx) (err error) {
 		return Throw500Error(c, err)
 	}
 
-	if product, err = a.str.SelectProduct(uint64(prID)); err != nil {
+	if card, err = a.str.SelectCard(uint64(cdID)); err != nil {
 		return Throw500Error(c, err)
 	}
 
-	if userProduct, err = a.str.SelectUserProduct(user.TelegramID, product.ID); err != nil {
+	if userCard, err = a.str.SelectUserCard(user.TelegramID, card.ID); err != nil {
 		return Throw500Error(c, err)
 	}
 
-	if userProduct.Level > 0 {
-		coinsClicked = math.CalculateCoinsPerClick(
-			product.StartCoinsPerClick,
-			userProduct.Level,
-			product.CoinsPerClickMultiplier,
+	if userCard.Level > 0 {
+		coinsClicked = math.CalculateAlgebraCoinsPerClick(
+			card.CoinsPerClick,
+			userCard.Level,
 			math.CalculateInvestorsMultiplier(user.Investors),
 		)
 	}
@@ -227,22 +222,22 @@ func (a *API) ClickProduct(c *fiber.Ctx) (err error) {
 	}
 
 	var (
-		allProducts  []model.Product
-		userProducts []model.UserProduct
+		allCards  []model.Card
+		userCards []model.UserCard
 	)
 
-	if allProducts, err = a.str.SelectProducts(); err != nil {
+	if allCards, err = a.str.SelectCards(); err != nil {
 		return Throw500Error(c, err)
 	}
 
-	if userProducts, err = a.str.SelectUserProducts(user.TelegramID); err != nil {
+	if userCards, err = a.str.SelectUserCards(user.TelegramID); err != nil {
 		return Throw500Error(c, err)
 	}
 
-	return Throw200Response(c, CreateGameResponse(user, allProducts, userProducts))
+	return Throw200Response(c, CreateGameResponse(user, allCards, userCards))
 }
 
-func (a *API) BuyProduct(c *fiber.Ctx) (err error) {
+func (a *API) BuyCard(c *fiber.Ctx) (err error) {
 	var (
 		tgID int
 		prID int
@@ -252,46 +247,46 @@ func (a *API) BuyProduct(c *fiber.Ctx) (err error) {
 		return Throw400Error(c, "telegram_id is required")
 	}
 
-	if prID = c.QueryInt("product_id"); prID == 0 {
-		return Throw400Error(c, "product_id is required")
+	if prID = c.QueryInt("card_id"); prID == 0 {
+		return Throw400Error(c, "card_id is required")
 	}
 
-	a.lgr.Info("try to buy product", zap.Int("telegram_id", tgID), zap.Int("product_id", prID))
+	a.lgr.Info("try to buy card", zap.Int("telegram_id", tgID), zap.Int("card_id", prID))
 
 	var (
-		user         *model.User
-		product      *model.Product
-		userProduct  *model.UserProduct
-		allProducts  []model.Product
-		userProducts []model.UserProduct
+		user      *model.User
+		card      *model.Card
+		userCard  *model.UserCard
+		allCards  []model.Card
+		userCards []model.UserCard
 	)
 
 	if user, err = a.str.SelectUser(uint64(tgID)); err != nil {
 		return Throw500Error(c, err)
 	}
 
-	if product, err = a.str.SelectProduct(uint64(prID)); err != nil {
+	if card, err = a.str.SelectCard(uint64(prID)); err != nil {
 		return Throw500Error(c, err)
 	}
 
-	if allProducts, err = a.str.SelectProducts(); err != nil {
+	if allCards, err = a.str.SelectCards(); err != nil {
 		return Throw500Error(c, err)
 	}
 
-	if userProducts, err = a.str.SelectUserProducts(user.TelegramID); err != nil {
+	if userCards, err = a.str.SelectUserCards(user.TelegramID); err != nil {
 		return Throw500Error(c, err)
 
 	}
 
-	if userProduct, err = a.str.SelectUserProduct(user.TelegramID, product.ID); err != nil {
+	if userCard, err = a.str.SelectUserCard(user.TelegramID, card.ID); err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			priceToBuy := math.CalculateUpgradePrice(product.StartProductPrice, 0, product.ProductPriceMultiplier)
+			priceToBuy := math.CalculateUpgradePrice(card.Price, 0, card.PriceMultiplier)
 
 			if user.Coins < priceToBuy {
 				return Throw400Error(c, "not enough coins")
 			}
 
-			if userProduct, err = a.str.InsertUserProduct(user.TelegramID, product.ID, 1); err != nil {
+			if userCard, err = a.str.InsertUserCard(user.TelegramID, card.ID, 1); err != nil {
 				return Throw500Error(c, err)
 			}
 
@@ -299,20 +294,20 @@ func (a *API) BuyProduct(c *fiber.Ctx) (err error) {
 				return Throw500Error(c, err)
 			}
 
-			if userProducts, err = a.str.SelectUserProducts(user.TelegramID); err != nil {
+			if userCards, err = a.str.SelectUserCards(user.TelegramID); err != nil {
 				return Throw500Error(c, err)
 			}
 
-			return Throw200Response(c, CreateGameResponse(user, allProducts, userProducts))
+			return Throw200Response(c, CreateGameResponse(user, allCards, userCards))
 		} else {
 			return Throw500Error(c, err)
 		}
 	}
 
 	priceToBuy := math.CalculateUpgradePrice(
-		product.StartProductPrice,
-		userProduct.Level,
-		product.ProductPriceMultiplier,
+		card.Price,
+		userCard.Level,
+		card.PriceMultiplier,
 	)
 
 	if user.Coins < priceToBuy {
@@ -323,15 +318,15 @@ func (a *API) BuyProduct(c *fiber.Ctx) (err error) {
 		return Throw500Error(c, err)
 	}
 
-	if userProduct, err = a.str.UpdateUserProductLevel(user.TelegramID, product.ID, userProduct.Level+1); err != nil {
+	if userCard, err = a.str.UpdateUserCardLevel(user.TelegramID, card.ID, userCard.Level+1); err != nil {
 		return Throw500Error(c, err)
 	}
 
-	if userProducts, err = a.str.SelectUserProducts(user.TelegramID); err != nil {
+	if userCards, err = a.str.SelectUserCards(user.TelegramID); err != nil {
 		return Throw500Error(c, err)
 	}
 
-	return Throw200Response(c, CreateGameResponse(user, allProducts, userProducts))
+	return Throw200Response(c, CreateGameResponse(user, allCards, userCards))
 }
 
 func (a *API) ResetGame(c *fiber.Ctx) (err error) {
@@ -346,9 +341,9 @@ func (a *API) ResetGame(c *fiber.Ctx) (err error) {
 	a.lgr.Info("try to reset game", zap.Int("telegram_id", tgID))
 
 	var (
-		user         *model.User
-		allProducts  []model.Product
-		userProducts []model.UserProduct
+		user      *model.User
+		allCards  []model.Card
+		userCards []model.UserCard
 	)
 
 	if user, err = a.str.SelectUser(uint64(tgID)); err != nil {
@@ -359,11 +354,11 @@ func (a *API) ResetGame(c *fiber.Ctx) (err error) {
 		return Throw500Error(c, err)
 	}
 
-	if allProducts, err = a.str.SelectProducts(); err != nil {
+	if allCards, err = a.str.SelectCards(); err != nil {
 		return Throw500Error(c, err)
 	}
 
-	if userProducts, err = a.str.SelectUserProducts(user.TelegramID); err != nil {
+	if userCards, err = a.str.SelectUserCards(user.TelegramID); err != nil {
 		return Throw500Error(c, err)
 	}
 
@@ -375,15 +370,15 @@ func (a *API) ResetGame(c *fiber.Ctx) (err error) {
 		return Throw500Error(c, err)
 	}
 
-	for _, userProduct := range userProducts {
-		if userProduct.Level > 0 {
-			if _, err = a.str.UpdateUserProductLevel(user.TelegramID, userProduct.ProductID, 0); err != nil {
+	for _, userCard := range userCards {
+		if userCard.Level > 0 {
+			if _, err = a.str.UpdateUserCardLevel(user.TelegramID, userCard.CardID, 0); err != nil {
 				return Throw500Error(c, err)
 			}
 		}
 	}
 
-	if _, err = a.str.UpdateUserProductLevel(user.TelegramID, 1, 1); err != nil {
+	if _, err = a.str.UpdateUserCardLevel(user.TelegramID, 1, 1); err != nil {
 		return Throw500Error(c, err)
 	}
 
@@ -391,13 +386,13 @@ func (a *API) ResetGame(c *fiber.Ctx) (err error) {
 		return Throw500Error(c, err)
 	}
 
-	if allProducts, err = a.str.SelectProducts(); err != nil {
+	if allCards, err = a.str.SelectCards(); err != nil {
 		return Throw500Error(c, err)
 	}
 
-	if userProducts, err = a.str.SelectUserProducts(user.TelegramID); err != nil {
+	if userCards, err = a.str.SelectUserCards(user.TelegramID); err != nil {
 		return Throw500Error(c, err)
 	}
 
-	return Throw200Response(c, CreateGameResponse(user, allProducts, userProducts))
+	return Throw200Response(c, CreateGameResponse(user, allCards, userCards))
 }

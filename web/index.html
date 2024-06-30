@@ -40,23 +40,23 @@
     <div class="h-100" style="padding: 8em 0 6em 0">
         <Transition name="state" mode="out-in">
             <div class="container d-flex flex-column gap-3 px-3" v-if="state.current === 'main'">
-                <div v-for="product in game_data.products">
-                    <div class="d-flex w-100 gap-3" v-if="product.current_level > 0">
+                <div v-for="card in game_data.cards">
+                    <div class="d-flex w-100 gap-3" v-if="card.current_level > 0">
                         <div class="d-flex flex-column gap-2 align-items-center"
-                             @pointerdown="Click(TelegramID, product.id); PopEffect($event)">
+                             @pointerdown="Click(TelegramID, card.id); PopEffect($event)">
                             <img class="rounded-4 border border-dark border-1 clickable"
-                                 alt="img" height="96px" width="96px" v-bind:src="product.image_url">
-                            <span class="fw-bold text-secondary small">LVL {{ product.current_level }}</span>
+                                 alt="img" height="96px" width="96px" v-bind:src="card.image_url">
+                            <span class="fw-bold text-secondary small">LVL {{ card.current_level }}</span>
                         </div>
                         <div class="d-flex flex-column flex-grow-1 gap-1 w-25">
                             <span class="fw-bolder text-uppercase d-inline-block text-truncate"
-                            >{{ product.name}}</span>
+                            >{{ card.name}}</span>
                             <div class="d-flex align-items-center justify-content-between m-0 p-0 small">
                                 <span class="text-dark fw-bold me-2">Current p/c:</span>
                                 <div class="d-flex align-items-center m-0 p-0 font-monospace">
                                     <img src="asset/img/coin.svg" alt="coin" height="18px" class="me-2">
                                     <span class="text-dark fw-bold text-truncate"
-                                    >{{ FormatNumber(product.current_coins_per_click) }}</span>
+                                    >{{ FormatNumber(card.current_coins_per_click) }}</span>
                                 </div>
                             </div>
                             <div class="d-flex align-items-center justify-content-between m-0 p-0 small">
@@ -64,26 +64,26 @@
                                 <div class="d-flex align-items-center m-0 p-0 font-monospace">
                                     <img src="asset/img/coin.svg" alt="coin" height="18px" class="me-2">
                                     <span class="text-dark fw-bold text-truncate"
-                                    >{{ FormatNumber(product.next_level_coins_per_click) }}</span>
+                                    >{{ FormatNumber(card.next_level_coins_per_click) }}</span>
                                 </div>
                             </div>
                             <div class="d-flex align-items-center justify-content-between m-0 p-0">
-                                <a v-bind:class="'btn btn-lg btn-success fw-bold w-100 d-flex align-items-center justify-content-center clickable' + (product.upgrade_price > game_data.current_coins ? ' disabled' : '')"
-                                   @click="BuyProduct(TelegramID, product.id); PopEffect($event)">
+                                <a v-bind:class="'btn btn-lg btn-success fw-bold w-100 d-flex align-items-center justify-content-center clickable' + (card.upgrade_price > game_data.current_coins ? ' disabled' : '')"
+                                   @click="BuyCard(TelegramID, card.id); PopEffect($event)">
                                     <span class="text-uppercase me-1">BUY</span>
                                     <img src="asset/img/coin.svg" alt="coin" height="22px" class="me-1">
-                                    <span class="text-truncate">{{ FormatNumber(product.upgrade_price) }}</span>
+                                    <span class="text-truncate">{{ FormatNumber(card.upgrade_price) }}</span>
                                 </a>
                             </div>
                         </div>
                     </div>
                     <div class="" v-else>
-                        <span class="fw-bolder text-uppercase d-block mb-2 text-truncate">{{ product.name }}</span>
-                        <a v-bind:class="'btn btn-lg btn-success fw-bold w-100 d-flex align-items-center justify-content-center clickable' + (product.upgrade_price > game_data.current_coins ? ' disabled' : '')"
-                           @click="BuyProduct(TelegramID, product.id); PopEffect($event)">
+                        <span class="fw-bolder text-uppercase d-block mb-2 text-truncate">{{ card.name }}</span>
+                        <a v-bind:class="'btn btn-lg btn-success fw-bold w-100 d-flex align-items-center justify-content-center clickable' + (card.upgrade_price > game_data.current_coins ? ' disabled' : '')"
+                           @click="BuyCard(TelegramID, card.id); PopEffect($event)">
                             <span class="text-uppercase me-1">UNLOCK</span>
                             <img src="asset/img/coin.svg" alt="coin" height="22px" class="me-1">
-                            <span class="text-truncate">{{ FormatNumber(product.upgrade_price) }}</span>
+                            <span class="text-truncate">{{ FormatNumber(card.upgrade_price) }}</span>
                         </a>
                     </div>
                 </div>

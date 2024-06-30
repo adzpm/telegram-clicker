@@ -11,21 +11,23 @@ type (
 		Investors   uint64 `json:"investors"`
 	}
 
-	UserProduct struct {
+	UserCard struct {
 		ID         uint64 `json:"id"`
 		TelegramID uint64 `json:"telegram_id"`
-		ProductID  uint64 `json:"product_id"`
+		CardID     uint64 `json:"card_id"`
 		Level      uint64 `json:"level"`
+		NextClick  uint64 `json:"next_click"`
 	}
 
-	Product struct {
-		ID                      uint64  `json:"id"`
-		Name                    string  `json:"name"`
-		ImageURL                string  `json:"image_url"`
-		StartProductPrice       uint64  `json:"start_product_price"`
-		ProductPriceMultiplier  float64 `json:"product_price_multiplier"`
-		StartCoinsPerClick      uint64  `json:"start_coins_per_click"`
-		CoinsPerClickMultiplier float64 `json:"coins_per_click_multiplier"`
-		MaxLevel                uint64  `json:"max_level"`
+	Card struct {
+		ID              uint64  `json:"id"`
+		Name            string  `json:"name"`
+		ImageURL        string  `json:"image_url"`
+		Price           uint64  `json:"price"`
+		PriceMultiplier float64 `json:"price_multiplier"`
+		CoinsPerClick   uint64  `json:"coins_per_click"`
+		ClickTimeout    uint64  `json:"click_timeout"`
+		UpgradeLevel    uint64  `json:"upgrade_level"`
+		MaxLevel        uint64  `json:"max_level"`
 	}
 )

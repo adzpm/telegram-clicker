@@ -5,7 +5,7 @@ const (
 	InvestorMultiplier = 0.02    // 2% for each investor
 )
 
-func CalculateCoinsPerClick(startCoins, level uint64, coinsMultiplier, investorsMultiplier float64) uint64 {
+func CalculateGeometricCoinsPerClick(startCoins, level uint64, coinsMultiplier, investorsMultiplier float64) uint64 {
 	if level == 0 {
 		return 0
 	}
@@ -16,6 +16,19 @@ func CalculateCoinsPerClick(startCoins, level uint64, coinsMultiplier, investors
 	}
 
 	return uint64(coinsPerClick * investorsMultiplier)
+}
+
+func CalculateAlgebraCoinsPerClick(startCoins, level uint64, investorsMultiplier float64) uint64 {
+	if level == 0 {
+		return 0
+	}
+
+	coinsPerClick := startCoins
+	for i := uint64(1); i < level; i++ {
+		coinsPerClick += startCoins
+	}
+
+	return uint64(float64(coinsPerClick) * investorsMultiplier)
 }
 
 // CalculateUpgradePrice calculates the price of the upgrade to the next level.

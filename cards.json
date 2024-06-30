@@ -1,0 +1,112 @@
+[
+  {
+    "id": 1,
+    "name": "Concept development",
+    "image_url": "asset/img/step_1.svg",
+    "price": 5,
+    "price_multiplier": 1.25,
+    "coins_per_click": 1,
+    "click_timeout": 1,
+    "upgrade_level": 50,
+    "max_level": 1000
+  },
+  {
+    "id": 2,
+    "name": "Whitepaper creation",
+    "image_url": "asset/img/step_2.svg",
+    "price": 60,
+    "price_multiplier": 1.25,
+    "coins_per_click": 30,
+    "click_timeout": 2,
+    "upgrade_level": 50,
+    "max_level": 1000
+  },
+  {
+    "id": 3,
+    "name": "Attracting investment via ICO",
+    "image_url": "asset/img/step_3.svg",
+    "price": 720,
+    "price_multiplier": 1.25,
+    "coins_per_click": 360,
+    "click_timeout": 5,
+    "upgrade_level": 50,
+    "max_level": 1000
+  },
+  {
+    "id": 4,
+    "name": "MVP development",
+    "image_url": "asset/img/step_4.svg",
+    "price": 8640,
+    "price_multiplier": 1.25,
+    "coins_per_click": 4320,
+    "click_timeout": 11,
+    "upgrade_level": 50,
+    "max_level": 1000
+  },
+  {
+    "id": 5,
+    "name": "Testing",
+    "image_url": "asset/img/step_5.svg",
+    "price": 104000,
+    "price_multiplier": 1.25,
+    "coins_per_click": 52000,
+    "click_timeout": 18,
+    "upgrade_level": 50,
+    "max_level": 1000
+  },
+  {
+    "id": 6,
+    "name": "Launch of blockchain network and token",
+    "image_url": "asset/img/step_6.svg",
+    "price": 1200000,
+    "price_multiplier": 1.25,
+    "coins_per_click": 600000,
+    "click_timeout": 90,
+    "upgrade_level": 50,
+    "max_level": 1000
+  },
+  {
+    "id": 7,
+    "name": "Promotion and Marketing",
+    "image_url": "asset/img/step_7.svg",
+    "price": 15000000,
+    "price_multiplier": 1.25,
+    "coins_per_click": 7500000,
+    "click_timeout": 390,
+    "upgrade_level": 50,
+    "max_level": 1000
+  },
+  {
+    "id": 8,
+    "name": "Partnership with other companies",
+    "image_url": "asset/img/step_8.svg",
+    "price": 180000000,
+    "price_multiplier": 1.25,
+    "coins_per_click": 90000000,
+    "click_timeout": 1500,
+    "upgrade_level": 50,
+    "max_level": 1000
+  },
+  {
+    "id": 9,
+    "name": "Token listing on major exchanges",
+    "image_url": "asset/img/step_9.svg",
+    "price": 2150000000,
+    "price_multiplier": 1.25,
+    "coins_per_click": 1075000000,
+    "click_timeout": 7200,
+    "upgrade_level": 50,
+    "max_level": 1000
+  },
+  {
+    "id": 10,
+    "name": "Support and development",
+    "image_url": "asset/img/step_10.svg",
+    "price": 26000000000,
+    "price_multiplier": 1.25,
+    "coins_per_click": 13000000000,
+    "click_timeout": 36000,
+    "upgrade_level": 50,
+    "max_level": 1000
+  }
+]

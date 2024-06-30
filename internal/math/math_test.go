@@ -32,7 +32,41 @@ func TestCalculateCoinsPerClick(t *testing.T) {
 	for name, tc := range testCases {
 		t.Run(name, func(t *testing.T) {
 			investorsMultiplier := CalculateInvestorsMultiplier(tc.investors)
-			result := CalculateCoinsPerClick(tc.startCoins, tc.level, tc.coinsMultiplier, investorsMultiplier)
+			result := CalculateGeometricCoinsPerClick(tc.startCoins, tc.level, tc.coinsMultiplier, investorsMultiplier)
+			if result != tc.expected {
+				t.Errorf("expected %d, got %d", tc.expected, result)
+			}
+		})
+	}
+}
+
+func TestCalculateCoinsPerClickV2(t *testing.T) {
+	testCases := map[string]struct {
+		startCoins uint64
+		level      uint64
+		investors  uint64
+
+		expected uint64
+	}{
+		"case 1": {1, 0, 0, 0},
+		"case 2": {1, 1, 0, 1},
+		"case 3": {1, 2, 0, 2},
+		"case 4": {1, 3, 0, 3},
+		"case 5": {1, 4, 0, 4},
+		"case 6": {1, 5, 0, 5},
+
+		"case 1-1": {1, 0, 50, 0},
+		"case 1-2": {1, 1, 50, 2},
+		"case 1-3": {1, 2, 50, 4},
+		"case 1-4": {1, 3, 50, 6},
+		"case 1-5": {1, 4, 50, 8},
+		"case 1-6": {1, 5, 50, 10},
+	}
+
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+			investorsMultiplier := CalculateInvestorsMultiplier(tc.investors)
+			result := CalculateAlgebraCoinsPerClick(tc.startCoins, tc.level, investorsMultiplier)
 			if result != tc.expected {
 				t.Errorf("expected %d, got %d", tc.expected, result)
 			}

@@ -45,8 +45,8 @@ let Application = Vue.createApp({
             })
         },
 
-        Click(telegram_id, product_id) {
-            let url = this.CurrentAddress + '/click' + '?telegram_id=' + telegram_id + '&product_id=' + product_id
+        Click(telegram_id, card_id) {
+            let url = this.CurrentAddress + '/click' + '?telegram_id=' + telegram_id + '&card_id=' + card_id
 
             axios.get(url).then(response => {
                 console.log(response.data)
@@ -56,8 +56,8 @@ let Application = Vue.createApp({
             })
         },
 
-        BuyProduct(telegram_id, product_id) {
-            let url = this.CurrentAddress + '/buy' + '?telegram_id=' + telegram_id + '&product_id=' + product_id
+        BuyCard(telegram_id, card_id) {
+            let url = this.CurrentAddress + '/buy' + '?telegram_id=' + telegram_id + '&card_id=' + card_id
 
             axios.get(url).then(response => {
                 console.log(response.data)
