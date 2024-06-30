@@ -89,7 +89,7 @@
                     <div class="" v-else>
                         <span class="fw-bolder text-uppercase d-block mb-2 text-truncate">{{ card.name }}</span>
                         <a v-bind:class="'btn btn-lg btn-success fw-bold w-100 d-flex align-items-center justify-content-center clickable' + (card.upgrade_price > game_data.current_coins ? ' disabled' : '')"
-                           @click="BuyCard(TelegramID, card.id); PopEffect($event)">
+                           @click="BuyCard($event, TelegramID, card.id)">
                             <span class="text-uppercase me-1">UNLOCK</span>
                             <img src="asset/img/coin.svg" alt="coin" height="22px" class="me-1">
                             <span class="text-truncate">{{ FormatNumber(card.upgrade_price) }}</span>
