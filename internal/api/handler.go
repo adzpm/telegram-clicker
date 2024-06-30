@@ -42,6 +42,7 @@ func mergeCards(
 			ImageURL:               card.ImageURL,
 			MaxLevel:               card.MaxLevel,
 			NextLevelPrice:         card.Price,
+			ClickTimeout:           card.ClickTimeout,
 			NextLevelCoinsPerClick: card.CoinsPerClick,
 		}
 	}
@@ -63,6 +64,8 @@ func mergeCards(
 		var (
 			cardID             = userCard.CardID
 			level              = userCard.Level
+			nextClick          = userCard.NextClick
+			lastClick          = userCard.LastClick
 			startPrice         = allCardsMap[cardID].Price
 			startCoinsPerClick = allCardsMap[cardID].CoinsPerClick
 			priceMp            = allCardsMap[cardID].PriceMultiplier
@@ -78,6 +81,8 @@ func mergeCards(
 		cards[cardID].NextLevelPrice = nextPrice
 		cards[cardID].CurrentCoinsPerClick = curCoins
 		cards[cardID].NextLevelCoinsPerClick = nextCoins
+		cards[cardID].NextClick = nextClick
+		cards[cardID].LastClick = lastClick
 	}
 
 	return cards
@@ -91,19 +96,17 @@ func CreateGameResponse(user *model.User, allCards []model.Card, userCards []mod
 	)
 
 	return &model.Game{
-		UserID:       user.ID,
-		TelegramID:   user.TelegramID,
-		LastSeen:     user.LastSeen,
-		CurrentCoins: user.Coins,
-		CurrentGold:  user.Gold,
-
+		UserID:                        user.ID,
+		TelegramID:                    user.TelegramID,
+		LastSeen:                      user.LastSeen,
+		CurrentCoins:                  user.Coins,
+		CurrentGold:                   user.Gold,
 		CurrentInvestors:              user.Investors,
 		CurrentInvestorsMultiplier:    curmlt,
 		InvestorsMultiplierAfterReset: nxtmlt,
 		InvestorsAfterReset:           icount,
 		PercentsPerInvestor:           math.InvestorMultiplier * 100,
-
-		Cards: mergeCards(user, allCards, userCards),
+		Cards:                         mergeCards(user, allCards, userCards),
 	}
 }
 
@@ -172,6 +175,7 @@ func (a *API) EnterGame(c *fiber.Ctx) (err error) {
 
 func (a *API) ClickCard(c *fiber.Ctx) (err error) {
 	var (
+		tn   = uint64(time.Now().Unix())
 		tgID int
 		cdID int
 	)
@@ -213,11 +217,27 @@ func (a *API) ClickCard(c *fiber.Ctx) (err error) {
 		)
 	}
 
+	if userCard.NextClick == 0 {
+		userCard.NextClick = tn
+	}
+
+	if tn < userCard.NextClick {
+		return Throw400Error(c, "you can't click now")
+	}
+
 	if user, err = a.str.UpdateUserCoins(user.TelegramID, user.Coins+coinsClicked); err != nil {
 		return Throw500Error(c, err)
 	}
 
 	if user, err = a.str.UpdateUserEarnedCoins(user.TelegramID, user.EarnedCoins+coinsClicked); err != nil {
+		return Throw500Error(c, err)
+	}
+
+	if userCard, err = a.str.UpdateUserCardLastClick(user.TelegramID, card.ID, tn); err != nil {
+		return Throw500Error(c, err)
+	}
+
+	if userCard, err = a.str.UpdateUserCardNextClick(user.TelegramID, card.ID, tn+card.ClickTimeout); err != nil {
 		return Throw500Error(c, err)
 	}
 

@@ -28,6 +28,7 @@ type (
 
 		ClickTimeout uint64 `json:"click_timeout"`
 		NextClick    uint64 `json:"next_click"`
+		LastClick    uint64 `json:"last_click"`
 
 		CurrentCoinsPerClick   uint64 `json:"current_coins_per_click"`
 		NextLevelCoinsPerClick uint64 `json:"next_level_coins_per_click"`

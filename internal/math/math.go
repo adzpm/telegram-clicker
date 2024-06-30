@@ -1,7 +1,7 @@
 package math
 
 const (
-	OneInvestorCoins   = 1000000 // one investor for 1M coins
+	OneInvestorCoins   = 5000000 // one investor for 5M coins
 	InvestorMultiplier = 0.02    // 2% for each investor
 )
 
@@ -45,9 +45,7 @@ func CalculateUpgradePrice(startPrice, level uint64, priceMultiplier float64) ui
 	return uint64(upgradePrice)
 }
 
-func CalculateInvestorsCount(earnedCoins uint64) uint64 {
-	return earnedCoins / OneInvestorCoins
-}
+func CalculateInvestorsCount(earnedCoins uint64) uint64 { return earnedCoins / OneInvestorCoins }
 
 func CalculateInvestorsMultiplier(investors uint64) float64 {
 	return 1 + float64(investors)*InvestorMultiplier

@@ -17,6 +17,7 @@ type (
 		CardID     uint64 `json:"card_id"`
 		Level      uint64 `json:"level"`
 		NextClick  uint64 `json:"next_click"`
+		LastClick  uint64 `json:"last_click"`
 	}
 
 	Card struct {

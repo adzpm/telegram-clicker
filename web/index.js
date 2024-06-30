@@ -30,6 +30,7 @@ let Application = Vue.createApp({
             telegram_data: null,
             game_data: null,
             error: null,
+            percents: {},
         }
     },
 
@@ -45,34 +46,39 @@ let Application = Vue.createApp({
             })
         },
 
-        Click(telegram_id, card_id) {
+        Click(e, telegram_id, card_id) {
+            if (this.percents[card_id] !== 100) return
+
             let url = this.CurrentAddress + '/click' + '?telegram_id=' + telegram_id + '&card_id=' + card_id
 
             axios.get(url).then(response => {
                 console.log(response.data)
                 this.game_data = response.data
+                this.PopEffect(e)
             }).catch(error => {
                 this.ShowError(error.response.data)
             })
         },
 
-        BuyCard(telegram_id, card_id) {
+        BuyCard(e, telegram_id, card_id) {
             let url = this.CurrentAddress + '/buy' + '?telegram_id=' + telegram_id + '&card_id=' + card_id
 
             axios.get(url).then(response => {
                 console.log(response.data)
                 this.game_data = response.data
+                this.PopEffect(e)
             }).catch(error => {
                 this.ShowError(error.response.data)
             })
         },
 
-        Reset(telegram_id) {
+        Reset(e, telegram_id) {
             let url = this.CurrentAddress + '/reset' + '?telegram_id=' + telegram_id
 
             axios.get(url).then(response => {
                 console.log(response.data)
                 this.game_data = response.data
+                this.PopEffect(e)
             }).catch(error => {
                 this.ShowError(error.response.data)
             })
@@ -142,7 +148,27 @@ let Application = Vue.createApp({
             }
 
             return num.toString();
-        }
+        },
+
+        CalculatePercentage(last_click, next_click) {
+            if (next_click === 0 || last_click === 0) return 100
+
+            let totalInterval = next_click - last_click,
+                elapsedTime = Math.floor(Date.now() / 1000) - last_click,
+                remainingPercentage = ((elapsedTime / totalInterval) * 100).toFixed(0)
+
+            if (remainingPercentage < 0) remainingPercentage = 0
+            if (remainingPercentage > 100) remainingPercentage = 100
+
+            return remainingPercentage
+        },
+
+        StartPercentCalculation() {
+            for (let card_id in this.game_data.cards) {
+                let card = this.game_data.cards[card_id]
+                this.percents[card_id] = this.CalculatePercentage(card.last_click, card.next_click)
+            }
+        },
     },
 
     computed: {
@@ -175,6 +201,10 @@ let Application = Vue.createApp({
         this.telegram_data = {...window.Telegram?.WebApp?.initDataUnsafe}
 
         this.Enter(this.TelegramID)
+
+        let updater = setInterval(() => {
+            this.StartPercentCalculation()
+        }, 250);
     },
 })
 

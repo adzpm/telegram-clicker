@@ -291,6 +291,42 @@ func (s *Storage) UpdateUserCardLevel(telegramID, cardID, level uint64) (userCar
 	return userCard, nil
 }
 
+func (s *Storage) UpdateUserCardNextClick(telegramID, cardID, nextClick uint64) (userCard *model.UserCard, err error) {
+	s.lgr.Debug("updating user card next click",
+		zap.Uint64("telegram_id", telegramID),
+		zap.Uint64("card_id", cardID),
+		zap.Uint64("next_click", nextClick),
+	)
+
+	if res := s.str.Table("user_cards").Where("telegram_id = ? AND card_id = ?", telegramID, cardID).Update("next_click", nextClick); res.Error != nil {
+		return nil, res.Error
+	}
+
+	if userCard, err = s.SelectUserCard(telegramID, cardID); err != nil {
+		return nil, err
+	}
+
+	return userCard, nil
+}
+
+func (s *Storage) UpdateUserCardLastClick(telegramID, cardID, lastClick uint64) (userCard *model.UserCard, err error) {
+	s.lgr.Debug("updating user card last click",
+		zap.Uint64("telegram_id", telegramID),
+		zap.Uint64("card_id", cardID),
+		zap.Uint64("last_click", lastClick),
+	)
+
+	if res := s.str.Table("user_cards").Where("telegram_id = ? AND card_id = ?", telegramID, cardID).Update("last_click", lastClick); res.Error != nil {
+		return nil, res.Error
+	}
+
+	if userCard, err = s.SelectUserCard(telegramID, cardID); err != nil {
+		return nil, err
+	}
+
+	return userCard, nil
+}
+
 func (s *Storage) SelectCard(cardID uint64) (cards *model.Card, err error) {
 	s.lgr.Debug("selecting card", zap.Uint64("card_id", cardID))
 

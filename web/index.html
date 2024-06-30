@@ -10,7 +10,8 @@
     <link rel="stylesheet" href="pkg/animate.min.css">
     <link rel="stylesheet" href="style.css">
     <script src="pkg/axios.min.js"></script>
-    <script src="pkg/vue.global.prod.js"></script>
+    <script src="pkg/vue.global.js"></script>
+    <!--    <script src="pkg/vue.global.prod.js"></script>-->
 </head>
 <body class="vh-100" id="app">
 
@@ -37,39 +38,47 @@
         </div>
     </div>
 
-    <div class="h-100" style="padding: 8em 0 6em 0">
+    <div class="" style="padding: 8em 0 6em 0">
         <Transition name="state" mode="out-in">
             <div class="container d-flex flex-column gap-3 px-3" v-if="state.current === 'main'">
                 <div v-for="card in game_data.cards">
                     <div class="d-flex w-100 gap-3" v-if="card.current_level > 0">
-                        <div class="d-flex flex-column gap-2 align-items-center"
-                             @pointerdown="Click(TelegramID, card.id); PopEffect($event)">
-                            <img class="rounded-4 border border-dark border-1 clickable"
-                                 alt="img" height="96px" width="96px" v-bind:src="card.image_url">
+                        <div class="d-flex flex-column gap-2 align-items-center">
+                            <div v-bind:class="'overflow-hidden border rounded-3 border-black clickable' + (percents[card.id] == 100 ? '' : ' opacity-50')"
+                                 @pointerdown="Click($event, TelegramID, card.id)">
+                                <img alt="img" class="bg-white" height="86px" width="96px" v-bind:src="card.image_url">
+                                <div class="progress w-100 rounded-0 bg-white" style="height: 10px">
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-success"
+                                         v-bind:style="'width: ' + percents[card.id] + '%'"></div>
+                                </div>
+                            </div>
                             <span class="fw-bold text-secondary small">LVL {{ card.current_level }}</span>
                         </div>
                         <div class="d-flex flex-column flex-grow-1 gap-1 w-25">
-                            <span class="fw-bolder text-uppercase d-inline-block text-truncate"
-                            >{{ card.name}}</span>
+                            <span class="fw-bolder text-uppercase d-inline-block text-truncate">{{ card.name }}</span>
                             <div class="d-flex align-items-center justify-content-between m-0 p-0 small">
-                                <span class="text-dark fw-bold me-2">Current p/c:</span>
+                                <span class="text-dark fw-bold me-2">Per click:</span>
                                 <div class="d-flex align-items-center m-0 p-0 font-monospace">
-                                    <img src="asset/img/coin.svg" alt="coin" height="18px" class="me-2">
+                                    <img src="asset/img/coin.svg" alt="coin" height="18px" class="me-1">
                                     <span class="text-dark fw-bold text-truncate"
                                     >{{ FormatNumber(card.current_coins_per_click) }}</span>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center justify-content-between m-0 p-0 small">
-                                <span class="text-dark fw-bold me-2">Next p/c:</span>
-                                <div class="d-flex align-items-center m-0 p-0 font-monospace">
-                                    <img src="asset/img/coin.svg" alt="coin" height="18px" class="me-2">
+                                    <img src="asset/img/right.svg" alt="right" height="18px" class="mx-1">
+                                    <img src="asset/img/coin.svg" alt="coin" height="18px" class="me-1">
                                     <span class="text-dark fw-bold text-truncate"
                                     >{{ FormatNumber(card.next_level_coins_per_click) }}</span>
                                 </div>
                             </div>
+                            <div class="d-flex align-items-center justify-content-between m-0 p-0 small">
+                                <span class="text-dark fw-bold me-2">Timeout:</span>
+                                <div class="d-flex align-items-center m-0 p-0 font-monospace">
+                                    <img src="asset/img/clock.svg" alt="time" height="18px" class="me-2">
+                                    <span class="text-dark fw-bold text-truncate"
+                                    >{{ card.click_timeout }} sec</span>
+                                </div>
+                            </div>
                             <div class="d-flex align-items-center justify-content-between m-0 p-0">
                                 <a v-bind:class="'btn btn-lg btn-success fw-bold w-100 d-flex align-items-center justify-content-center clickable' + (card.upgrade_price > game_data.current_coins ? ' disabled' : '')"
-                                   @click="BuyCard(TelegramID, card.id); PopEffect($event)">
+                                   @click="BuyCard($event, TelegramID, card.id)">
                                     <span class="text-uppercase me-1">BUY</span>
                                     <img src="asset/img/coin.svg" alt="coin" height="22px" class="me-1">
                                     <span class="text-truncate">{{ FormatNumber(card.upgrade_price) }}</span>
@@ -118,7 +127,7 @@
                     </div>
                 </div>
                 <a v-bind:class="'btn btn-lg btn-success fw-bold w-100 d-flex align-items-center justify-content-center clickable' + (game_data.current_investors < game_data.investors_after_reset ? '' : ' disabled')"
-                   @click="Reset(TelegramID); PopEffect($event); state.current = 'main'">
+                   @click="Reset($event, TelegramID); state.current = 'main'">
                     <span class="text-uppercase me-1">RESET</span>
                 </a>
             </div>
