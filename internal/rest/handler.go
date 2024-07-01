@@ -404,6 +404,14 @@ func (r *REST) ResetGame(c *fiber.Ctx) (err error) {
 			if _, err = r.str.UpdateUserCardLevel(user.TelegramID, userCard.CardID, 0); err != nil {
 				return Throw500Error(c, err)
 			}
+
+			if _, err = r.str.UpdateUserCardLastClick(user.TelegramID, userCard.CardID, 0); err != nil {
+				return Throw500Error(c, err)
+			}
+
+			if _, err = r.str.UpdateUserCardNextClick(user.TelegramID, userCard.CardID, 0); err != nil {
+				return Throw500Error(c, err)
+			}
 		}
 	}
 
