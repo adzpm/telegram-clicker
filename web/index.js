@@ -126,20 +126,20 @@ let Application = Vue.createApp({
 
         FormatNumber(num) {
             const units = [
-                {value: 1e45, suffix: ' INF'},
-                {value: 1e42, suffix: ' TREDECILLION'},
-                {value: 1e39, suffix: ' DUODECILLION'},
-                {value: 1e36, suffix: ' UNDECILLION'},
-                {value: 1e33, suffix: ' DECILLION'},
-                {value: 1e30, suffix: ' NONILLION'},
-                {value: 1e27, suffix: ' OCTILLION'},
-                {value: 1e24, suffix: ' SEPTILLION'},
-                {value: 1e21, suffix: ' SEXTILLION'},
-                {value: 1e18, suffix: ' QUINTILLION'},
-                {value: 1e15, suffix: ' QUADRILLION'},
-                {value: 1e12, suffix: ' TRILLION'},
-                {value: 1e09, suffix: ' BILLION'},
-                {value: 1e06, suffix: ' MILLION'},
+                {value: 1e45, suffix: ' ???'},
+                {value: 1e42, suffix: ' TRE'},
+                {value: 1e39, suffix: ' DUO'},
+                {value: 1e36, suffix: ' UND'},
+                {value: 1e33, suffix: ' DEC'},
+                {value: 1e30, suffix: ' NON'},
+                {value: 1e27, suffix: ' OCT'},
+                {value: 1e24, suffix: ' SPT'},
+                {value: 1e21, suffix: ' SXT'},
+                {value: 1e18, suffix: ' QNT'},
+                {value: 1e15, suffix: ' QDR'},
+                {value: 1e12, suffix: ' TRL'},
+                {value: 1e09, suffix: ' BLN'},
+                {value: 1e06, suffix: ' MLN'},
             ];
 
             for (let unit of units) {
