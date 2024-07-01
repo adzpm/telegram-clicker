@@ -2,6 +2,7 @@ package rest
 
 import (
 	"context"
+	"github.com/adzpm/telegram-clicker/internal/math"
 
 	fiber "github.com/gofiber/fiber/v2"
 	zap "go.uber.org/zap"
@@ -16,31 +17,33 @@ type (
 		lgr *zap.Logger
 		str *storage.Storage
 		cfg *config.REST
+		mth *math.Math
 	}
 )
 
-func New(lgr *zap.Logger, str *storage.Storage, cfg *config.REST) *REST {
+func New(lgr *zap.Logger, str *storage.Storage, mth *math.Math, cfg *config.REST) *REST {
 	return &REST{
 		srv: fiber.New(),
 		lgr: lgr,
 		cfg: cfg,
+		mth: mth,
 		str: str,
 	}
 }
 
-func (a *REST) setupRoutes(ctx context.Context) {
-	a.lgr.Debug("setting up routes")
+func (r *REST) setupRoutes(ctx context.Context) {
+	r.lgr.Debug("setting up routes")
 
-	a.srv.Static("/", a.cfg.WebPath)
+	r.srv.Static("/", r.cfg.WebPath)
 
-	a.srv.Get("/enter", a.EnterGame)
-	a.srv.Get("/click", a.ClickCard)
-	a.srv.Get("/buy", a.BuyCard)
-	a.srv.Get("/reset", a.ResetGame)
+	r.srv.Get("/enter", r.EnterGame)
+	r.srv.Get("/click", r.ClickCard)
+	r.srv.Get("/buy", r.BuyCard)
+	r.srv.Get("/reset", r.ResetGame)
 }
 
-func (a *REST) Start(ctx context.Context) error {
-	a.setupRoutes(ctx)
+func (r *REST) Start(ctx context.Context) error {
+	r.setupRoutes(ctx)
 
-	return a.srv.Listen(a.cfg.Host + ":" + a.cfg.Port)
+	return r.srv.Listen(r.cfg.Host + ":" + r.cfg.Port)
 }

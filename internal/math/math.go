@@ -63,3 +63,7 @@ func (m *Math) CalculateInvestorsCount(earnedCoins uint64) uint64 {
 func (m *Math) CalculateInvestorsMultiplier(investors uint64) float64 {
 	return 1 + float64(investors)*m.config.PercentsForInvestor
 }
+
+func (m *Math) GetGameVariables() *config.GameVariables {
+	return m.config
+}

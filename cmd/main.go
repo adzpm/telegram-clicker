@@ -7,6 +7,7 @@ import (
 	zap "go.uber.org/zap"
 
 	config "github.com/adzpm/telegram-clicker/internal/config"
+	math "github.com/adzpm/telegram-clicker/internal/math"
 	rest "github.com/adzpm/telegram-clicker/internal/rest"
 	storage "github.com/adzpm/telegram-clicker/internal/storage"
 )
@@ -33,6 +34,7 @@ func main() {
 		lgr *zap.Logger
 		str *storage.Storage
 		rst *rest.REST
+		mth *math.Math
 		err error
 	)
 
@@ -52,7 +54,11 @@ func main() {
 		panic(err)
 	}
 
-	rst = rest.New(lgr, str, &cfg.REST)
+	if mth = math.New(&cfg.GameVariables); err != nil {
+		panic(err)
+	}
+
+	rst = rest.New(lgr, str, mth, &cfg.REST)
 
 	if err = rst.Start(ctx); err != nil {
 		panic(err)

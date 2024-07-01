@@ -33,12 +33,10 @@ type (
 	}
 )
 
-// New creates a new Config instance
-func New() *Config {
-	return &Config{}
-}
+// New creates a new Config instance.
+func New() *Config { return &Config{} }
 
-// Read loads the configuration from the given path
+// Read loads the configuration from the given path.
 func (c *Config) Read(path string) (err error) {
 	var configBytes []byte
 
