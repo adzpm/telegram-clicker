@@ -1,11 +1,19 @@
 package math
 
-const (
-	OneInvestorCoins   = 5000000 // one investor for 5M coins
-	InvestorMultiplier = 0.02    // 2% for each investor
+import (
+	config "github.com/adzpm/telegram-clicker/internal/config"
 )
 
-func CalculateGeometricCoinsPerClick(startCoins, level uint64, coinsMultiplier, investorsMultiplier float64) uint64 {
+type (
+	Math struct {
+		config *config.GameVariables
+	}
+)
+
+func New(cfg *config.GameVariables) *Math { return &Math{cfg} }
+
+// CalculateGeometricCoinsPerClick calculates the number of coins per click based on the level.
+func (m *Math) CalculateGeometricCoinsPerClick(startCoins, level uint64, coinsMultiplier, investorsMultiplier float64) uint64 {
 	if level == 0 {
 		return 0
 	}
@@ -18,7 +26,8 @@ func CalculateGeometricCoinsPerClick(startCoins, level uint64, coinsMultiplier, 
 	return uint64(coinsPerClick * investorsMultiplier)
 }
 
-func CalculateAlgebraCoinsPerClick(startCoins, level uint64, investorsMultiplier float64) uint64 {
+// CalculateAlgebraCoinsPerClick calculates the number of coins per click based on the level.
+func (m *Math) CalculateAlgebraCoinsPerClick(startCoins, level uint64, investorsMultiplier float64) uint64 {
 	if level == 0 {
 		return 0
 	}
@@ -32,7 +41,7 @@ func CalculateAlgebraCoinsPerClick(startCoins, level uint64, investorsMultiplier
 }
 
 // CalculateUpgradePrice calculates the price of the upgrade to the next level.
-func CalculateUpgradePrice(startPrice, level uint64, priceMultiplier float64) uint64 {
+func (m *Math) CalculateUpgradePrice(startPrice, level uint64, priceMultiplier float64) uint64 {
 	if level < 1 {
 		return startPrice
 	}
@@ -45,8 +54,12 @@ func CalculateUpgradePrice(startPrice, level uint64, priceMultiplier float64) ui
 	return uint64(upgradePrice)
 }
 
-func CalculateInvestorsCount(earnedCoins uint64) uint64 { return earnedCoins / OneInvestorCoins }
+// CalculateInvestorsCount calculates the number of investors based on the earned coins.
+func (m *Math) CalculateInvestorsCount(earnedCoins uint64) uint64 {
+	return earnedCoins / m.config.EarnedCoinsForInvestor
+}
 
-func CalculateInvestorsMultiplier(investors uint64) float64 {
-	return 1 + float64(investors)*InvestorMultiplier
+// CalculateInvestorsMultiplier calculates the multiplier for the investors.
+func (m *Math) CalculateInvestorsMultiplier(investors uint64) float64 {
+	return 1 + float64(investors)*m.config.PercentsForInvestor
 }

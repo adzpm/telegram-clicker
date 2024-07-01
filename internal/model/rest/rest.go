@@ -1,4 +1,4 @@
-package model
+package rest
 
 type (
 	Game struct {

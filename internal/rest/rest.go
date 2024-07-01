@@ -1,40 +1,35 @@
-package api
+package rest
 
 import (
 	"context"
+
 	fiber "github.com/gofiber/fiber/v2"
 	zap "go.uber.org/zap"
 
+	config "github.com/adzpm/telegram-clicker/internal/config"
 	storage "github.com/adzpm/telegram-clicker/internal/storage"
 )
 
 type (
-	Config struct {
-		Port    string
-		WebPath string
-	}
-
-	API struct {
+	REST struct {
 		srv *fiber.App
 		lgr *zap.Logger
 		str *storage.Storage
-		cfg *Config
+		cfg *config.REST
 	}
 )
 
-func NewAPI(lgr *zap.Logger, str *storage.Storage, cfg *Config) *API {
-	srv := fiber.New()
-
-	return &API{
-		srv: srv,
+func New(lgr *zap.Logger, str *storage.Storage, cfg *config.REST) *REST {
+	return &REST{
+		srv: fiber.New(),
 		lgr: lgr,
 		cfg: cfg,
 		str: str,
 	}
 }
 
-func (a *API) setupRoutes(ctx context.Context) {
-	a.lgr.Info("setting up routes")
+func (a *REST) setupRoutes(ctx context.Context) {
+	a.lgr.Debug("setting up routes")
 
 	a.srv.Static("/", a.cfg.WebPath)
 
@@ -44,8 +39,8 @@ func (a *API) setupRoutes(ctx context.Context) {
 	a.srv.Get("/reset", a.ResetGame)
 }
 
-func (a *API) Start(ctx context.Context) error {
+func (a *REST) Start(ctx context.Context) error {
 	a.setupRoutes(ctx)
 
-	return a.srv.Listen(":" + a.cfg.Port)
+	return a.srv.Listen(a.cfg.Host + ":" + a.cfg.Port)
 }

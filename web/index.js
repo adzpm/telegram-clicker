@@ -85,7 +85,7 @@ let Application = Vue.createApp({
             })
         },
 
-        // non-api methods
+        // non-rest methods
 
         ShowError(err) {
             this.error = err

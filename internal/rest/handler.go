@@ -1,27 +1,28 @@
-package api
+package rest
 
 import (
 	"errors"
-	"gorm.io/gorm"
 	"net/http"
 	"time"
 
 	fiber "github.com/gofiber/fiber/v2"
 	zap "go.uber.org/zap"
+	gorm "gorm.io/gorm"
 
-	"github.com/adzpm/telegram-clicker/internal/math"
-	"github.com/adzpm/telegram-clicker/internal/model"
+	math "github.com/adzpm/telegram-clicker/internal/math"
+	restModel "github.com/adzpm/telegram-clicker/internal/model/rest"
+	storageModel "github.com/adzpm/telegram-clicker/internal/model/storage"
 )
 
 func mergeCards(
-	user *model.User,
-	allCards []model.Card,
-	userCards []model.UserCard,
-) map[uint64]*model.GameCard {
+	user *storageModel.User,
+	allCards []storageModel.Card,
+	userCards []storageModel.UserCard,
+) map[uint64]*restModel.GameCard {
 	var (
-		cards        = make(map[uint64]*model.GameCard, len(allCards))
-		allCardsMap  = make(map[uint64]*model.Card, len(allCards))
-		userCardsMap = make(map[uint64]*model.UserCard, len(userCards))
+		cards        = make(map[uint64]*restModel.GameCard, len(allCards))
+		allCardsMap  = make(map[uint64]*storageModel.Card, len(allCards))
+		userCardsMap = make(map[uint64]*storageModel.UserCard, len(userCards))
 	)
 
 	// prepare allCards map
@@ -36,7 +37,7 @@ func mergeCards(
 
 	// fill cards map
 	for _, card := range allCards {
-		cards[card.ID] = &model.GameCard{
+		cards[card.ID] = &rest.GameCard{
 			ID:                     card.ID,
 			Name:                   card.Name,
 			ImageURL:               card.ImageURL,
@@ -88,14 +89,14 @@ func mergeCards(
 	return cards
 }
 
-func CreateGameResponse(user *model.User, allCards []model.Card, userCards []model.UserCard) *model.Game {
+func CreateGameResponse(user *model.User, allCards []model.Card, userCards []model.UserCard) *rest.Game {
 	var (
 		icount = math.CalculateInvestorsCount(user.EarnedCoins)
 		curmlt = math.CalculateInvestorsMultiplier(user.Investors)
 		nxtmlt = math.CalculateInvestorsMultiplier(icount)
 	)
 
-	return &model.Game{
+	return &rest.Game{
 		UserID:                        user.ID,
 		TelegramID:                    user.TelegramID,
 		LastSeen:                      user.LastSeen,
@@ -122,7 +123,7 @@ func Throw200Response(c *fiber.Ctx, dst interface{}) (err error) {
 	return c.Status(http.StatusOK).JSON(dst)
 }
 
-func (a *API) EnterGame(c *fiber.Ctx) (err error) {
+func (a *REST) EnterGame(c *fiber.Ctx) (err error) {
 	var (
 		user *model.User
 		tgID int
@@ -173,7 +174,7 @@ func (a *API) EnterGame(c *fiber.Ctx) (err error) {
 	return Throw200Response(c, CreateGameResponse(user, allCards, userCards))
 }
 
-func (a *API) ClickCard(c *fiber.Ctx) (err error) {
+func (a *REST) ClickCard(c *fiber.Ctx) (err error) {
 	var (
 		tn   = uint64(time.Now().Unix())
 		tgID int
@@ -257,7 +258,7 @@ func (a *API) ClickCard(c *fiber.Ctx) (err error) {
 	return Throw200Response(c, CreateGameResponse(user, allCards, userCards))
 }
 
-func (a *API) BuyCard(c *fiber.Ctx) (err error) {
+func (a *REST) BuyCard(c *fiber.Ctx) (err error) {
 	var (
 		tgID int
 		prID int
@@ -349,7 +350,7 @@ func (a *API) BuyCard(c *fiber.Ctx) (err error) {
 	return Throw200Response(c, CreateGameResponse(user, allCards, userCards))
 }
 
-func (a *API) ResetGame(c *fiber.Ctx) (err error) {
+func (a *REST) ResetGame(c *fiber.Ctx) (err error) {
 	var (
 		tgID int
 	)

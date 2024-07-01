@@ -1,0 +1,26 @@
+rest:
+  host: 127.0.0.1
+  port: 8080
+  web_path: /Users/dzpm/projects/telegram-clicker/web
+
+storage:
+  host: 127.0.0.1
+  port: 5432
+  db_name: local
+  db_user: local
+  db_pass: local
+
+game_variables:
+  cards_path: /Users/dzpm/projects/telegram-clicker/cards.json
+  earned_coins_for_investor: 5000000
+  percents_for_investor: 0.02
+  cards:
+    - id: 1
+      name: "Card 1"
+      image_url: "asset/img/step_1.svg"
+      price: 100
+      price_multiplier: 1.25
+      coins_per_click: 10
+      click_timeout: 3
+      upgrade_level: 50
+      max_level: 1000

@@ -2,38 +2,59 @@ package main
 
 import (
 	"context"
+	"os"
 
 	zap "go.uber.org/zap"
 
-	api "github.com/adzpm/telegram-clicker/internal/api"
+	config "github.com/adzpm/telegram-clicker/internal/config"
+	rest "github.com/adzpm/telegram-clicker/internal/rest"
 	storage "github.com/adzpm/telegram-clicker/internal/storage"
 )
 
-func main() {
-	ctx, can := context.WithCancel(context.Background())
-	defer can()
+const (
+	envClickerConfigPath = "CLICKER_CONFIG_PATH"
+	defClickerConfigPath = "example.config.yaml"
+)
 
-	lgr, err := zap.NewProduction()
-	if err != nil {
+func getEnv(key, fallback string) string {
+	if value, ok := os.LookupEnv(key); ok {
+		return value
+	}
+
+	return fallback
+}
+
+func main() {
+	var (
+		ctx, cancel = context.WithCancel(context.Background())
+		cfgPath     = getEnv(envClickerConfigPath, defClickerConfigPath)
+		cfg         = config.New()
+
+		lgr *zap.Logger
+		str *storage.Storage
+		rst *rest.REST
+		err error
+	)
+
+	defer cancel()
+
+	if err = cfg.Read(cfgPath); err != nil {
+		panic(err)
+	}
+
+	if lgr, err = zap.NewProduction(); err != nil {
 		panic(err)
 	}
 
 	defer func() { _ = lgr.Sync() }()
 
-	str, err := storage.NewStorage(lgr, &storage.Config{
-		Path: "tgc.db",
-	})
-
-	if err != nil {
+	if str, err = storage.New(lgr, &cfg.Storage); err != nil {
 		panic(err)
 	}
 
-	a := api.NewAPI(lgr, str, &api.Config{
-		Port:    "8080",
-		WebPath: "./web/",
-	})
+	rst = rest.New(lgr, str, &cfg.REST)
 
-	if err = a.Start(ctx); err != nil {
+	if err = rst.Start(ctx); err != nil {
 		panic(err)
 	}
 }
