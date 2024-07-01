@@ -64,6 +64,7 @@ func (m *Math) CalculateInvestorsMultiplier(investors uint64) float64 {
 	return 1 + float64(investors)*m.config.PercentsForInvestor
 }
 
+// GetGameVariables returns the game variables.
 func (m *Math) GetGameVariables() *config.GameVariables {
 	return m.config
 }

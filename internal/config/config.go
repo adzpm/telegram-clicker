@@ -1,8 +1,9 @@
 package config
 
 import (
-	"gopkg.in/yaml.v3"
 	"os"
+
+	yaml "gopkg.in/yaml.v3"
 )
 
 type (
